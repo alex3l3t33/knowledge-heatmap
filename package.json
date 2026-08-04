@@ -1,0 +1,17 @@
+{
+  "name": "knowledge-heatmap",
+  "version": "1.0.0",
+  "description": "Evaluate the health of your Obsidian notes.",
+  "main": "main.js",
+  "scripts": {
+    "build": "esbuild src/main.ts --bundle --outfile=main.js --format=cjs --platform=node",
+    "dev": "esbuild src/main.ts --bundle --outfile=main.js --format=cjs --platform=node --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "esbuild": "^0.19.0"
+  },
+  "dependencies": {
+    "obsidian": "latest"
+  }
+}

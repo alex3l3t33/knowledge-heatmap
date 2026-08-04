@@ -1,0 +1,9 @@
+{
+    "id": "knowledge-heatmap",
+    "name": "Knowledge Heatmap",
+    "version": "1.0.0",
+    "author": "Codex",
+    "description": "Evaluate the health of your Obsidian notes with a visual heatmap.",
+    "min_obsidian_version": "0.15.0",
+    "main": "main.js"
+}

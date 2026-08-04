@@ -1,0 +1,9 @@
+processed_at,filename,status,metrics_found,error
+2026-07-15T18:31:38,hematology-20231122.PDF,error,0,No test date found
+2026-07-15T18:31:38,hematology-20250111.PDF,error,0,No test date found
+2026-07-15T18:31:39,hematology-20250327.PDF,error,0,No test date found
+2026-07-15T18:31:39,hematology-20260715.PDF,error,0,No test date found
+2026-07-15T18:37:03,2023-11-22,hematology-20231122.PDF,success,28,
+2026-07-15T18:37:03,2025-01-11,hematology-20250111.PDF,success,1,
+2026-07-15T18:37:03,2025-03-27,hematology-20250327.PDF,success,26,
+2026-07-15T18:37:03,2026-07-15,hematology-20260715.PDF,success,27,

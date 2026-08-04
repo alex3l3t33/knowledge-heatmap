@@ -1,0 +1,83 @@
+date,parameter,value,unit,reference_min,reference_max,source_file,file_hash,original_line
+2023-11-22,ALT,46.0,UI/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,TRANSAMINASES(SGPT-ALAT) 46 UI/L Inf.à50
+2025-03-27,ALT,39.0,UI/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,TRANSAMINASES(SGPT-ALAT) 39 UI/L Inf.à50 46 Le22.11.2023
+2026-07-15,ALT,29.0,UI/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,TRANSAMINASES(SGPT-ALAT) 29 UI/L 10à50 47
+2023-11-22,AST,31.0,UI/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,TRANSAMINASES(SGOT-ASAT) 31 UI/L Inf.à50
+2025-03-27,AST,30.0,UI/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,TRANSAMINASES(SGOT-ASAT) 30 UI/L Inf.à50 31
+2026-07-15,AST,27.0,UI/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,TRANSAMINASES(SGOT-ASAT) 27 UI/L 10à50 32 Le28.11.2025
+2023-11-22,Basophils,0.6,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Basophiles 0,6 % soit 31 /mm3 Inf.à200"
+2025-03-27,Basophils,0.4,%,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"Basophiles 0,4 % soit 26 /mm3 Inf.à200 31"
+2026-07-15,Basophils,0.7,%,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"Basophiles 0,7 % soit 40 /mm3 Inf.à200 19 26"
+2023-11-22,CRP,2.0,g/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,PROTEINECREACTIVE(CRP) 2 mg/L Inf.à5
+2023-11-22,Creatinine,10.2,g/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"CREATININEMIE 10,2 mg/L 7,2à11,8"
+2025-03-27,Creatinine,10.4,g/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"CREATININEMIE 10,4 mg/L 7,2à11,8 10,2"
+2026-07-15,Creatinine,11.6,g/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"CREATININEMIE 11,6 mg/L 6,7à11,8 11,1"
+2023-11-22,Eosinophils,3.2,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Eosinophiles 3,2 % soit 166 /mm3 Inf.à600"
+2025-03-27,Eosinophils,4.2,%,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"Eosinophiles 4,2 % soit 277 /mm3 Inf.à600 166"
+2026-07-15,Eosinophils,3.8,%,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"Eosinophiles 3,8 % soit 217 /mm3 Inf.à600 239 277"
+2026-07-15,Ferritin,244.0,,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,FERRITINE 244 ng/mL 30à400
+2025-03-27,Ferritin,139.0,,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,FERRITINE 139 ng/mL 30à300
+2023-11-22,Glucose,0.85,g/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"GLYCEMIE 0,85 g/L 0,70à1,10"
+2025-03-27,Glucose,0.9,g/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"GLYCEMIE 0,90 g/L 0,70à1,10 0,85 Le22.11.2023"
+2026-07-15,Glucose,0.86,g/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"GLYCEMIE 0,86 g/L 0,74à1,06 0,95 Le28.11.2025"
+2026-07-15,HDL Cholesterol,4.8,,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"RAPPORTTOTAL/HDL 4,8 Infà5,0 5,2"
+2023-11-22,HDL Cholesterol,0.49,g/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"CHOLESTEROLHDL 0,49 g/L Sup.à0,40"
+2023-11-22,HDL Cholesterol,0.4,g/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"TABAGISMEactifouarrêtédepuismoinsde3ans;HYPERTENSIONARTERIELLE;HDLc<ou=0,40g/L;DIABETEdetype2oudiabètedetype1deplusde15ansd'évolution;"
+2025-03-27,HDL Cholesterol,0.49,g/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"CHOLESTEROLHDL 0,49 g/L Sup.à0,40 0,49"
+2025-03-27,HDL Cholesterol,0.4,g/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"TABAGISMEactifouarrêtédepuismoinsde3ans;HYPERTENSIONARTERIELLE;HDLc<ou=0,40g/L;DIABETEdetype2oudiabètedetype1deplusde15ansd'évolution;"
+2026-07-15,HDL Cholesterol,0.48,g/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"CHOLESTEROLHDL 0,48 g/L Sup.à0,40 0,46"
+2026-07-15,HDL Cholesterol,0.4,g/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"TABAGISMEactifouarrêtédepuismoinsde3ans;HYPERTENSIONARTERIELLE;HDLc<ou=0,40g/L;DIABETEdetype2oudiabètedetype1deplusde15ansd'évolution;"
+2023-11-22,HDL Cholesterol,4.8,,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"RAPPORTTOTAL/HDL 4,8 Infà5,0"
+2025-03-27,HDL Cholesterol,5.0,,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"RAPPORTTOTAL/HDL 5,0 Infà5,0 4,8"
+2023-11-22,HbA1c,7.5,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Diabètedetype1 HbA1c<7,5%:Diabèteéquilibré"
+2023-11-22,HbA1c,7.0,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Diabètedetype2 HbA1c<ou=7,0%:Diabèteéquilibré HbA1c<5,7%:Risquefaibledediabète"
+2023-11-22,HbA1c,5.7,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"HbA1centre5,7%et6,4%:Pré-diabètepossible"
+2023-11-22,Hematocrit,44.2,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Hématocrite 44,2 % 40,0à54,0"
+2025-03-27,Hematocrit,43.8,%,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"Hématocrite 43,8 % 40,0à54,0 44,2"
+2026-07-15,Hematocrit,45.0,%,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"Hématocrite 45,0 % 40,0à54,0 45,4 43,8"
+2023-11-22,Hemoglobin,1.0,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"HEMOGLOBINEGLYQUEE(HBA1C) 5,0 %"
+2023-11-22,Hemoglobin,14.6,g/dL,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Hémoglobine 14,6 g/dL 13,0à18,0"
+2025-03-27,Hemoglobin,14.8,g/dL,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"Hémoglobine 14,8 g/dL 13,0à18,0 14,6"
+2026-07-15,Hemoglobin,15.3,g/dL,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"Hémoglobine 15,3 g/dL 13,0à18,0 15,2 14,8"
+2023-11-22,LDL Cholesterol,1.69,g/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"CHOLESTEROLLDL 1,69 g/L"
+2023-11-22,LDL Cholesterol,1.3,g/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Desmesureshygiéno-diététiquessontpréconiséessiLDL-C>1,3g/Loutriglycéridémie>1,5g/L"
+2023-11-22,LDL Cholesterol,1.9,g/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"UntauxdeLDL-C>ou=à1,9g/L(4,9mmol/L)enprésenced'antécédentsfamiliauxd'hypercholestérolémieetd'accidentscardiovasculairesdoitfaire"
+2025-03-27,LDL Cholesterol,1.69,g/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"CHOLESTEROLLDL 1,69 g/L 1,69"
+2025-03-27,LDL Cholesterol,1.3,g/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"Desmesureshygiéno-diététiquessontpréconiséessiLDL-C>1,3g/Loutriglycéridémie>1,5g/L"
+2025-03-27,LDL Cholesterol,1.9,g/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"UntauxdeLDL-C>ou=à1,9g/L(4,9mmol/L)enprésenced'antécédentsfamiliauxd'hypercholestérolémieetd'accidentscardiovasculairesdoitfaire"
+2026-07-15,LDL Cholesterol,1.53,g/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"CHOLESTEROLLDL 1,53 g/L 1,73"
+2026-07-15,LDL Cholesterol,1.3,g/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"Desmesureshygiéno-diététiquessontpréconiséessiLDL-C>1,3g/Loutriglycéridémie>1,5g/L"
+2026-07-15,LDL Cholesterol,1.9,g/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"UntauxdeLDL-C>ou=à1,9g/L(4,9mmol/L)enprésenced'antécédentsfamiliauxd'hypercholestérolémieetd'accidentscardiovasculairesdoitfaire"
+2023-11-22,Lymphocytes,32.7,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Lymphocytes 32,7 % soit 1700 /mm3 1100 à 4400"
+2025-03-27,Lymphocytes,34.3,%,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"Lymphocytes 34,3 % soit 2264 /mm3 1100 à 4400 1700"
+2026-07-15,Lymphocytes,36.1,%,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"Lymphocytes 36,1 % soit 2058 /mm3 1100 à 4400 2066 2264"
+2023-11-22,MCH,28.1,pg,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"T.C.M.H 28,1 pg 27,0à32,0"
+2025-03-27,MCH,29.2,pg,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"T.C.M.H 29,2 pg 27,0à32,0 28,1"
+2026-07-15,MCH,29.1,pg,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"T.C.M.H 29,1 pg 27,0à32,0 28,8 29,2"
+2023-11-22,MCHC,33.0,g/dL,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"C.C.M.H 33,0 g/dL 31,0à36,0"
+2025-03-27,MCHC,33.8,g/dL,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"C.C.M.H 33,8 g/dL 31,0à36,0 33,0"
+2026-07-15,MCHC,34.0,g/dL,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"C.C.M.H 34,0 g/dL 31,0à36,0 33,5 33,8"
+2023-11-22,MCV,85.0,fL,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,V.G.M 85 fL 79à97
+2025-03-27,MCV,87.0,fL,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,V.G.M 87 fL 79à97 85
+2026-07-15,MCV,86.0,fL,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,V.G.M 86 fL 79à97 86 87
+2023-11-22,Monocytes,9.3,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Monocytes 9,3 % soit 484 /mm3 200à800"
+2025-03-27,Monocytes,9.0,%,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"Monocytes 9,0 % soit 594 /mm3 200à800 484"
+2026-07-15,Monocytes,7.2,%,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"Monocytes 7,2 % soit 410 /mm3 200à800 554 594"
+2023-11-22,Neutrophils,54.2,%,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"Neutrophiles 54,2 % soit 2818 /mm3 1500 à7500"
+2025-03-27,Neutrophils,52.1,%,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"Neutrophiles 52,1 % soit 3439 /mm3 1500 à7500 2818"
+2026-07-15,Neutrophils,52.2,%,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"Neutrophiles 52,2 % soit 2975 /mm3 1500 à7500 3421 3439"
+2026-07-15,Platelets,212000.0,,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,Plaquettes 212000 /mm3 150000à400000 216000 Le28.11.2025 207000 Le27.03.2025
+2023-11-22,Platelets,217000.0,,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,Plaquettes 217000 /mm3 150000à400000
+2025-03-27,Platelets,207000.0,,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,Plaquettes 207000 /mm3 150000à400000 217000
+2025-03-27,Potassium,4.2,mmol/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"POTASSIUM 4,2 mmol/L 3,4à4,5"
+2026-07-15,Potassium,4.3,mmol/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"POTASSIUM 4,3 mmol/L 3,5à5,1"
+2025-03-27,Sodium,143.0,mmol/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,SODIUM 143 mmol/L 136à146
+2026-07-15,Sodium,144.0,mmol/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,SODIUM 144 mmol/L 136à145
+2026-07-15,TSH,3.63,UI/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"TSHu.s(Thyréostimuline) 3,63 mUI/L 0,27à4,20"
+2023-11-22,Triglycerides,0.86,g/L,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,"TRIGLYCERIDES 0,86 g/L 0,45à1,50"
+2025-03-27,Triglycerides,1.26,g/L,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,"TRIGLYCERIDES 1,26 g/L 0,45à1,50 0,86 Le22.11.2023"
+2026-07-15,Triglycerides,1.43,g/L,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,"TRIGLYCERIDES 1,43 g/L infà1,50 1,01 Le28.11.2025"
+2026-07-15,White Blood Cells,5700.0,,,,hematology-20260715.PDF,9094fed536b046e3d7184e1ca6d733f6a3a01fa83ceb323d3e379e83be3f2506,Leucocytes 5700 /mm3 4000à11000 6300 6600
+2023-11-22,White Blood Cells,5200.0,,,,hematology-20231122.PDF,28f1fd790986acb652b926a6fe09614bd67b8be3fd729fbf782bf3c727b1e154,Leucocytes 5200 /mm3 4000à11000
+2025-01-11,White Blood Cells,1000.0,,,,hematology-20250111.PDF,82c31edf63267cc3095d9b910fe16ea092c5b2478f2e294ae0180c68a5691b2d,Leucocytes 1000 /mL Inf.à10000
+2025-03-27,White Blood Cells,6600.0,,,,hematology-20250327.PDF,fe82c7fb1bf44b04264d3eb3daea918d8b9e227d9f8b57a6a2d091f5726eee6c,Leucocytes 6600 /mm3 4000à11000 5200
