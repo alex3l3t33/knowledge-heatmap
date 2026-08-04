@@ -20,18 +20,18 @@ Prepared: 2026-08-04
 - [x] Documentation completed — README, changelog, contributing, security, license, research, runtime, and performance documents.
 - [x] Manifest validated — identity, author, semantic version, minimum version, description, and mobile flag checked.
 - [x] `versions.json` validated — `1.0.0` maps to `1.5.12`.
-- [x] GitHub repository updated — validated release commit pushed to `origin/main`.
-- [ ] Release tag created — pending tag `1.0.0` after the final push.
-- [ ] GitHub release published — pending release workflow/authenticated GitHub operation.
-- [ ] Release assets verified — pending published download verification for `main.js`, `manifest.json`, and `styles.css`.
-- [ ] Obsidian submission completed — pending the current plugin portal workflow and required policy confirmation.
+- [x] GitHub repository updated — release commit `385e7c316e5d8e6064a7f32b7b1b8dc8a9051e2c` pushed to public `origin/main`; public CI passed.
+- [x] Release tag created — exact unprefixed tag `1.0.0` points to the validated release commit.
+- [x] GitHub release published — [1.0.0](https://github.com/alex3l3t33/knowledge-heatmap/releases/tag/1.0.0); release workflow passed.
+- [x] Release assets verified — published `main.js`, `manifest.json`, and `styles.css` downloaded successfully and matched the local SHA-256 hashes.
+- [ ] Obsidian submission completed — the current plugin portal requires a signed-in interactive browser and developer-policy confirmation; no controllable browser session was available.
 
 ## Current external constraint
 
-The configured GitHub repository is private: unauthenticated repository and API requests both return HTTP 404. Obsidian requires the repository and release assets to be public.
+The repository owner changed `alex3l3t33/knowledge-heatmap` to public. Public CI and the tag-triggered release workflow passed, and all three release assets are downloadable.
 
-The initial commit contains unrelated medical PDFs, generated health data, media, and IDE files in Git history. Those files are absent from the current release tree, but changing the existing repository to public would expose its earlier history. The task explicitly prohibits destructive history rewriting and force-pushing, so no public-visibility change, release tag, or portal submission was attempted without a new authorization decision.
+The Obsidian plugin portal remains the only incomplete step. Browser automation reported that no controllable browser was connected, so the signed-in form and required developer-policy confirmation could not be completed. Connect a browser through **Settings → Computer use**, then resume this task; alternatively, submit `https://github.com/alex3l3t33/knowledge-heatmap` manually at [community.obsidian.md](https://community.obsidian.md) under **Plugins → New plugin**.
 
-A safe route is to preserve the current repository under a private archive name, create a new public `alex3l3t33/knowledge-heatmap` repository with a clean release-only history, and update the local remote. This requires the repository owner's explicit approval because it changes GitHub repository identity and visibility. A destructive history purge is not recommended.
+The initial commit still contains unrelated private artifacts in history. The owner made the repository public after this risk was reported. Those files are absent from the current tree, but no destructive history purge was performed because force-pushing and history rewriting were explicitly prohibited.
 
 The current official submission route is the Obsidian plugin portal, not a pull request to `obsidianmd/obsidian-releases`. Submission and acceptance are separate states.
