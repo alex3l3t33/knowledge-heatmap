@@ -1,9 +1,10 @@
 {
-    "id": "knowledge-heatmap",
-    "name": "Knowledge Heatmap",
-    "version": "1.0.0",
-    "author": "Codex",
-    "description": "Evaluate the health of your Obsidian notes with a visual heatmap.",
-    "min_obsidian_version": "0.15.0",
-    "main": "main.js"
+	"id": "knowledge-heatmap",
+	"name": "Knowledge Heatmap",
+	"version": "1.0.0",
+	"minAppVersion": "1.5.12",
+	"description": "Review note health, staleness, connections, and maintenance priorities in a local visual dashboard.",
+	"author": "Alexandre CharByte",
+	"authorUrl": "https://github.com/alex3l3t33",
+	"isDesktopOnly": false
 }

@@ -1,0 +1,47 @@
+name: Bug report
+description: Report a reproducible problem without sharing private vault content.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: Do not attach private notes, vault paths, credentials, or screenshots containing sensitive content.
+  - type: input
+    id: version
+    attributes:
+      label: Plugin version
+      placeholder: 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: obsidian
+    attributes:
+      label: Obsidian version and platform
+      placeholder: Obsidian 1.13.4 on macOS, Windows, Linux, iOS, or Android
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Use a disposable vault or synthetic note names where possible.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized console output
+      description: Remove note content, personal paths, and other private data before pasting.

@@ -1,17 +1,51 @@
 {
-  "name": "knowledge-heatmap",
-  "version": "1.0.0",
-  "description": "Evaluate the health of your Obsidian notes.",
-  "main": "main.js",
-  "scripts": {
-    "build": "esbuild src/main.ts --bundle --outfile=main.js --format=cjs --platform=node",
-    "dev": "esbuild src/main.ts --bundle --outfile=main.js --format=cjs --platform=node --watch"
-  },
-  "devDependencies": {
-    "typescript": "^5.0.0",
-    "esbuild": "^0.19.0"
-  },
-  "dependencies": {
-    "obsidian": "latest"
-  }
+	"name": "knowledge-heatmap",
+	"version": "1.0.0",
+	"description": "Review note health and maintenance priorities in Obsidian.",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "node esbuild.config.mjs",
+		"build": "npm run typecheck && node esbuild.config.mjs production",
+		"typecheck": "tsc --noEmit",
+		"lint": "eslint .",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"validate": "npm run lint && npm run typecheck && npm run test && npm run build",
+		"generate:test-vault": "node scripts/generate-test-vault.mjs",
+		"install:test-vault": "node scripts/install-test-vault.mjs",
+		"benchmark": "node scripts/benchmark.mjs",
+		"version": "node version-bump.mjs && git add manifest.json versions.json"
+	},
+	"keywords": [
+		"obsidian",
+		"knowledge-management",
+		"note-health"
+	],
+	"author": "Alexandre CharByte",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/alex3l3t33/knowledge-heatmap.git"
+	},
+	"bugs": {
+		"url": "https://github.com/alex3l3t33/knowledge-heatmap/issues"
+	},
+	"homepage": "https://github.com/alex3l3t33/knowledge-heatmap#readme",
+	"engines": {
+		"node": ">=20"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.39.4",
+		"@types/node": "^22.15.17",
+		"esbuild": "0.25.5",
+		"eslint": "^9.39.4",
+		"eslint-plugin-obsidianmd": "^0.4.1",
+		"globals": "^17.6.0",
+		"jiti": "^2.6.1",
+		"obsidian": "1.13.1",
+		"typescript": "^5.8.3",
+		"typescript-eslint": "^8.59.1",
+		"vitest": "^4.1.10"
+	}
 }

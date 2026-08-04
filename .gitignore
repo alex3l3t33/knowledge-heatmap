@@ -1,0 +1,24 @@
+node_modules/
+main.js
+*.js.map
+coverage/
+release/
+
+.DS_Store
+.idea/
+.venv/
+*.swp
+
+# Dedicated test vaults and legacy synthetic data belong outside this repository.
+KnowledgeHeatmapDevVault/
+knowledge-heatmap-test-vault/
+
+# Unrelated media and data-processing artifacts accidentally included initially.
+jingmen_frames/
+*.mp3
+*.mp4
+error/
+output/
+processed/
+processing/
+process_blood_work.py
