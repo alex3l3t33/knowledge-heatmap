@@ -35,7 +35,6 @@ export class KnowledgeHeatmapModal extends Modal {
 	private renderScope: Component | undefined;
 	private notesScope: Component | undefined;
 	private generation = 0;
-	private snapshot: AnalysisSnapshot | undefined;
 	private searchQuery = "";
 	private statusFilter: StatusFilter = "all";
 	private visibleLimit = PAGE_SIZE;
@@ -50,14 +49,14 @@ export class KnowledgeHeatmapModal extends Modal {
 		super(app);
 	}
 
-	onOpen(): void {
+	override onOpen(): void {
 		this.closed = false;
 		this.modalEl.addClass("knowledge-heatmap-modal");
 		this.titleEl.setText("Note health dashboard");
 		void this.refresh(false);
 	}
 
-	onClose(): void {
+	override onClose(): void {
 		this.closed = true;
 		this.abortController?.abort();
 		this.disposeRenderScope();
@@ -102,7 +101,6 @@ export class KnowledgeHeatmapModal extends Modal {
 				return;
 			}
 
-			this.snapshot = snapshot;
 			this.renderSnapshot(snapshot);
 		} catch (error) {
 			if (
@@ -125,7 +123,7 @@ export class KnowledgeHeatmapModal extends Modal {
 			cls: "kh-muted",
 			text: "Preparing Markdown notes…",
 		});
-		progress.dataset.khProgress = String(generation);
+		progress.dataset["khProgress"] = String(generation);
 		const cancelButton = loading.createEl("button", { text: "Cancel" });
 		cancelButton.type = "button";
 		cancelButton.setAttr("aria-label", "Cancel note analysis");
@@ -275,7 +273,7 @@ export class KnowledgeHeatmapModal extends Modal {
 		const scope = this.resetNotesScope();
 		this.contentEl.querySelector("[data-kh-notes]")?.remove();
 		const section = this.contentEl.createDiv();
-		section.dataset.khNotes = "true";
+		section.dataset["khNotes"] = "true";
 		const notes = this.filteredNotes(snapshot.notes);
 		section.createEl("h3", {
 			cls: "kh-section-title",

@@ -1,11 +1,25 @@
 # Release readiness
 
-Version: 1.0.0
-Prepared: 2026-08-04
+Version: 1.0.1
+Prepared: 2026-08-05
+
+## Release-hardening pass — 2026-08-05
+
+- [x] Effective ESLint configuration verified — `no-unsafe-call` and `no-unsafe-return` are errors, not disabled or downgraded.
+- [x] Zero-warning policy enforced — `eslint . --max-warnings=0` is part of `npm run lint` and `npm run validate`.
+- [x] Strict TypeScript expanded and verified — unused code, missing overrides, unsafe index access, unreachable code, unused labels, and exact optional-property semantics are enforced in addition to `strict`.
+- [x] Current official sample plugin compared — commit `07ceb81d1fb3384af611ebf665a1ec42a7e5926d`, dated 2026-08-02.
+- [x] Sample-plugin infrastructure aligned — EditorConfig, unprefixed npm tags, development source-map options, current checkout/setup actions, and Node 20/22/24 validation matrix.
+- [x] Artifact attestations configured — the tag workflow uses `actions/attest@v4` with `id-token: write` and `attestations: write` and attests all three published assets.
+- [x] Release validation added — versions, required assets, non-empty files, tag equality when present, and SHA-256 hashes are checked.
+- [x] Clean installs and validation passed on Node 20.20.2, 22.23.2, and 24.19.0 — 4 files and 22 tests on each runtime.
+- [x] Dependency audit passed — zero vulnerabilities.
+- [x] Actual Obsidian runtime recheck passed — Obsidian 1.13.4, 5,011-note synthetic vault, load/unload/reload, command/ribbon, settings persistence, search, filters, cache, and developer console.
+- [ ] Remote attestation issuance — GitHub creates the attestation when the exact `1.0.1` tag runs this workflow. The already-published 1.0.0 workflow did not contain this step.
 
 ## Validation checklist
 
-- [x] Official requirements researched — `docs/research.md`, current first-party sources accessed 2026-08-04.
+- [x] Official requirements researched — `docs/research.md`, current first-party sources accessed 2026-08-05.
 - [x] Code reviewed — API, lifecycle, security, privacy, mobile, accessibility, performance, and unload paths inspected and corrected.
 - [x] Lint passed — `npm run lint`.
 - [x] Type checking passed — `npm run typecheck`.
@@ -19,19 +33,17 @@ Prepared: 2026-08-04
 - [x] Security and privacy reviewed — no runtime network, telemetry, external account, unsafe HTML, note writes, or adapter assumptions; `npm audit` reported zero vulnerabilities.
 - [x] Documentation completed — README, changelog, contributing, security, license, research, runtime, and performance documents.
 - [x] Manifest validated — identity, author, semantic version, minimum version, description, and mobile flag checked.
-- [x] `versions.json` validated — `1.0.0` maps to `1.5.12`.
+- [x] `versions.json` validated — `1.0.0` and `1.0.1` map to `1.5.12`.
 - [x] GitHub repository updated — release commit `385e7c316e5d8e6064a7f32b7b1b8dc8a9051e2c` pushed to public `origin/main`; public CI passed.
 - [x] Release tag created — exact unprefixed tag `1.0.0` points to the validated release commit.
 - [x] GitHub release published — [1.0.0](https://github.com/alex3l3t33/knowledge-heatmap/releases/tag/1.0.0); release workflow passed.
 - [x] Release assets verified — published `main.js`, `manifest.json`, and `styles.css` downloaded successfully and matched the local SHA-256 hashes.
-- [ ] Obsidian submission completed — the current plugin portal requires a signed-in interactive browser and developer-policy confirmation; no controllable browser session was available.
+- [x] Obsidian automated submission review passed — confirmed by the repository owner on 2026-08-05.
 
-## Current external constraint
+## Current release boundary
 
-The repository owner changed `alex3l3t33/knowledge-heatmap` to public. Public CI and the tag-triggered release workflow passed, and all three release assets are downloadable.
-
-The Obsidian plugin portal remains the only incomplete step. Browser automation reported that no controllable browser was connected, so the signed-in form and required developer-policy confirmation could not be completed. Connect a browser through **Settings → Computer use**, then resume this task; alternatively, submit `https://github.com/alex3l3t33/knowledge-heatmap` manually at [community.obsidian.md](https://community.obsidian.md) under **Plugins → New plugin**.
+The hardening changes are prepared as version 1.0.1. They do not alter the already-published 1.0.0 assets or retroactively create an attestation for that release. Pushing the exact `1.0.1` tag runs the updated release workflow and issues verifiable attestations for the new assets.
 
 The initial commit still contains unrelated private artifacts in history. The owner made the repository public after this risk was reported. Those files are absent from the current tree, but no destructive history purge was performed because force-pushing and history rewriting were explicitly prohibited.
 
-The current official submission route is the Obsidian plugin portal, not a pull request to `obsidianmd/obsidian-releases`. Submission and acceptance are separate states.
+The automated Obsidian submission review has passed. Directory acceptance and publication remain controlled by Obsidian and are separate from the automated review result.

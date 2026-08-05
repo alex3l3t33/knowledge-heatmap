@@ -48,13 +48,13 @@ function stringArray(value: unknown): string[] {
 export function sanitizeSettings(value: unknown): KnowledgeHeatmapSettings {
 	const input = isRecord(value) ? value : {};
 	const staleAfterDays = numberInRange(
-		input.staleAfterDays,
+		input["staleAfterDays"],
 		DEFAULT_SETTINGS.staleAfterDays,
 		LIMITS.staleAfterDays.minimum,
 		LIMITS.staleAfterDays.maximum,
 	);
 	const forgottenAfterDays = numberInRange(
-		input.forgottenAfterDays,
+		input["forgottenAfterDays"],
 		DEFAULT_SETTINGS.forgottenAfterDays,
 		Math.max(LIMITS.forgottenAfterDays.minimum, staleAfterDays + 1),
 		LIMITS.forgottenAfterDays.maximum,
@@ -64,30 +64,30 @@ export function sanitizeSettings(value: unknown): KnowledgeHeatmapSettings {
 		staleAfterDays,
 		forgottenAfterDays,
 		expectedWordCount: numberInRange(
-			input.expectedWordCount,
+			input["expectedWordCount"],
 			DEFAULT_SETTINGS.expectedWordCount,
 			LIMITS.expectedWordCount.minimum,
 			LIMITS.expectedWordCount.maximum,
 		),
 		targetLinks: numberInRange(
-			input.targetLinks,
+			input["targetLinks"],
 			DEFAULT_SETTINGS.targetLinks,
 			LIMITS.targetLinks.minimum,
 			LIMITS.targetLinks.maximum,
 		),
 		newNoteGraceDays: numberInRange(
-			input.newNoteGraceDays,
+			input["newNoteGraceDays"],
 			DEFAULT_SETTINGS.newNoteGraceDays,
 			LIMITS.newNoteGraceDays.minimum,
 			LIMITS.newNoteGraceDays.maximum,
 		),
-		excludedPaths: stringArray(input.excludedPaths),
+		excludedPaths: stringArray(input["excludedPaths"]),
 		autoRefresh:
-			typeof input.autoRefresh === "boolean"
-				? input.autoRefresh
+			typeof input["autoRefresh"] === "boolean"
+				? input["autoRefresh"]
 				: DEFAULT_SETTINGS.autoRefresh,
 		eventDebounceMs: numberInRange(
-			input.eventDebounceMs,
+			input["eventDebounceMs"],
 			DEFAULT_SETTINGS.eventDebounceMs,
 			LIMITS.eventDebounceMs.minimum,
 			LIMITS.eventDebounceMs.maximum,

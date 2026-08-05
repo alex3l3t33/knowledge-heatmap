@@ -1,6 +1,6 @@
 # Runtime validation
 
-Validated: 2026-08-04
+Validated: 2026-08-05 (release-hardening recheck; full acceptance pass completed 2026-08-04)
 
 ## Test environment
 
@@ -12,7 +12,28 @@ Validated: 2026-08-04
 
 No private user content was copied into the test vault.
 
-## Results
+## Release-hardening recheck — 2026-08-05
+
+The production bundle was rebuilt, copied into the marked development vault, and reloaded in the actual Obsidian desktop app before this pass. Installed and project release-file hashes matched exactly.
+
+| Test | Result | Evidence |
+| --- | --- | --- |
+| Installed bundle | Pass | SHA-256: `main.js` `f8866601fa3b922897f7cea9730cc3fbec2502dd326ae035cb7959bcd04c0351`; `manifest.json` `7499d9d1375ef25584871c581493b9bfccb30910e897c01c488d676439c0edf6`; `styles.css` `6715fa72fe929f553c4c8572d78d8cc2c0ef2cb0a1b1897a72acc9a42bfe4766`. All three installed files matched the project build byte-for-byte. |
+| Load and reload | Pass | Obsidian 1.13.4 reloaded the v1.0.1 bundle, displayed **Knowledge Heatmap v1.0.1** in Community Plugins, and restored the ribbon action, command, and settings contribution. The dashboard reopened after reload with 5,010 included notes. |
+| Disable and re-enable | Pass | Disabling removed `knowledge-heatmap` from the enabled-plugin list; re-enabling restored it and the settings entry without an exception. |
+| Ribbon and command | Pass | The activity ribbon opened the dashboard; the command palette returned **Knowledge Heatmap: Open dashboard**, which opened the same UI. |
+| Large-vault cold analysis | Pass | 5,010 included notes and one excluded note completed in 624 ms with visible progress and 5,010 content reads. A post-reload command run completed in 617 ms. |
+| Search | Pass | Searching for “Recently maintained” returned exactly one matching note, score 88, healthy. |
+| Category filter | Pass | Selecting **Stale** returned 967 notes, matching the summary count. |
+| Cached forced refresh | Pass | Refresh completed in 597 ms with zero content reads and preserved the 5,010-note result. |
+| Settings and persistence | Pass | All controls rendered with the expected values; automatic refresh was toggled, persisted, and restored to `true`. |
+| Lifecycle cleanup | Pass | An open dashboard was closed before disable; unload/reload completed without stuck UI or duplicate contributions. |
+| Developer console | Pass | After load, analysis, refresh, settings persistence, disable, and re-enable, the console contained only Obsidian's standard developer-console banner and no plugin error. |
+| Standalone benchmark | Pass | 5,011 Markdown files: 177 ms cold pass, 28.8 ms warm pass, zero warm content reads, deterministic checksum matched. |
+
+No runtime defect was found during the hardening recheck, so no behavior change was required.
+
+## Full acceptance results — 2026-08-04
 
 | Test | Result | Evidence |
 | --- | --- | --- |

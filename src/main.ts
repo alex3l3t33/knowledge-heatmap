@@ -23,7 +23,7 @@ export default class KnowledgeHeatmapPlugin
 	private refreshTimer: number | undefined;
 	private unloading = false;
 
-	async onload(): Promise<void> {
+	override async onload(): Promise<void> {
 		this.pluginSettings = sanitizeSettings(await this.loadData());
 		this.dataService = new KnowledgeDataService(this.app);
 
@@ -44,7 +44,7 @@ export default class KnowledgeHeatmapPlugin
 		});
 	}
 
-	onunload(): void {
+	override onunload(): void {
 		this.unloading = true;
 		if (this.refreshTimer !== undefined) {
 			window.clearTimeout(this.refreshTimer);

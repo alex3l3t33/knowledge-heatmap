@@ -40,7 +40,7 @@ export class KnowledgeHeatmapSettingTab extends PluginSettingTab {
 		super(app, controller);
 	}
 
-	getSettingDefinitions(): SettingDefinitionItem[] {
+	override getSettingDefinitions(): SettingDefinitionItem[] {
 		return [
 			{
 				name: "Automatic refresh",
@@ -123,7 +123,7 @@ export class KnowledgeHeatmapSettingTab extends PluginSettingTab {
 		];
 	}
 
-	getControlValue(key: string): unknown {
+	override getControlValue(key: string): unknown {
 		if (key === "excludedPathsText") {
 			return this.controller.pluginSettings.excludedPaths.join("\n");
 		}
@@ -135,7 +135,7 @@ export class KnowledgeHeatmapSettingTab extends PluginSettingTab {
 		return undefined;
 	}
 
-	async setControlValue(key: string, value: unknown): Promise<void> {
+	override async setControlValue(key: string, value: unknown): Promise<void> {
 		if (key === "excludedPathsText" && typeof value === "string") {
 			await this.save({ excludedPaths: this.parseExcludedPaths(value) });
 			return;
@@ -151,7 +151,7 @@ export class KnowledgeHeatmapSettingTab extends PluginSettingTab {
 		}
 	}
 
-	display(): void {
+	override display(): void {
 		this.renderLegacySettings();
 	}
 
