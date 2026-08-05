@@ -16,7 +16,7 @@ Thank you for improving Knowledge Heatmap.
 4. Run `npm run validate`.
 5. For UI or lifecycle changes, install the build in a disposable vault and verify load, unload, themes, keyboard use, narrow layout, and the developer console.
 
-Core scoring tests should use an injected analysis time so results remain deterministic. Avoid Node or Electron APIs in plugin runtime code because mobile support is required.
+The validation command treats warnings as failures, confirms the unsafe-call and unsafe-return rules remain enabled at error severity, enforces the strict compiler options in `tsconfig.json`, runs the test suite, builds the production bundle, and validates the release files. Core scoring tests should use an injected analysis time so results remain deterministic. Avoid Node or Electron APIs in plugin runtime code because mobile support is required.
 
 ## Pull requests
 

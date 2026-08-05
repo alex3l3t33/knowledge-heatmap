@@ -1,6 +1,6 @@
 # Obsidian release and submission research
 
-Accessed: 2026-08-04
+Accessed: 2026-08-05
 
 This document summarizes current first-party requirements used to prepare Knowledge Heatmap. It intentionally paraphrases the sources rather than reproducing them.
 
@@ -19,6 +19,14 @@ This document summarizes current first-party requirements used to prepare Knowle
 - [Obsidian API type definitions](https://github.com/obsidianmd/obsidian-api)
 - [Obsidian releases and community directory data](https://github.com/obsidianmd/obsidian-releases)
 - [Current community plugin list](https://raw.githubusercontent.com/obsidianmd/obsidian-releases/master/community-plugins.json)
+- [GitHub artifact-attestation guidance](https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations)
+- [GitHub `actions/attest`](https://github.com/actions/attest)
+
+## 2026-08-05 sample-plugin and release review
+
+The official sample plugin was compared at commit `07ceb81d1fb3384af611ebf665a1ec42a7e5926d` (2026-08-02). Knowledge Heatmap now follows its current Node 20/22/24 CI matrix, `actions/checkout@v6`, `actions/setup-node@v6`, `actions/attest@v4`, exact unprefixed npm version tags, EditorConfig baseline, and inline development source-map options. Project-specific validation, tests, release tag checks, and privacy constraints remain stricter than the sample.
+
+GitHub's current guidance requires `id-token: write` and `attestations: write` for build provenance. The release workflow grants those permissions, attests `main.js`, `manifest.json`, and `styles.css` together after a successful build, then uploads the same files to the GitHub release. The attestation can be verified with `gh attestation verify <asset> --repo alex3l3t33/knowledge-heatmap` after a release created by the updated workflow exists.
 
 ## Current submission workflow
 

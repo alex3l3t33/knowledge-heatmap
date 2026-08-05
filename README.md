@@ -43,6 +43,12 @@ After the plugin is accepted into the Obsidian community directory:
 
 The release tag and the version in `manifest.json` must match exactly.
 
+Releases produced by the current workflow include GitHub build-provenance attestations for all three release files. After downloading an attested release, verify an asset with the GitHub CLI:
+
+```bash
+gh attestation verify main.js --repo alex3l3t33/knowledge-heatmap
+```
+
 ## Usage
 
 Open the dashboard from the activity ribbon or run **Knowledge Heatmap: Open dashboard** from the command palette.
@@ -133,12 +139,16 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+npm run verify:quality-config
+npm run verify:release
 npm run generate:test-vault
 npm run install:test-vault
 npm run benchmark
 ```
 
-The test-vault scripts use the `knowledge-heatmap-test-vault` directory next to the repository and refuse to replace an existing unmarked directory. They generate synthetic content only; do not point them at a real vault.
+`npm run lint` treats every warning as a failure and first verifies that `@typescript-eslint/no-unsafe-call` and `@typescript-eslint/no-unsafe-return` are enabled at error severity. `npm run verify:release` checks version consistency, required release files, and their SHA-256 hashes.
+
+The test-vault scripts use the `knowledge-heatmap-test-vault` directory next to the repository and refuse to replace an existing unmarked directory. They generate synthetic content only; do not point them at a personal vault.
 
 Contribution guidance is in [CONTRIBUTING.md](CONTRIBUTING.md). For bugs or feature requests, use the [GitHub issue tracker](https://github.com/alex3l3t33/knowledge-heatmap/issues) without attaching private vault content.
 
