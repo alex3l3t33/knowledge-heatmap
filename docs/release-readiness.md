@@ -15,7 +15,7 @@ Prepared: 2026-08-05
 - [x] Clean installs and validation passed on Node 20.20.2, 22.23.2, and 24.19.0 — 4 files and 22 tests on each runtime.
 - [x] Dependency audit passed — zero vulnerabilities.
 - [x] Actual Obsidian runtime recheck passed — Obsidian 1.13.4, 5,011-note synthetic vault, load/unload/reload, command/ribbon, settings persistence, search, filters, cache, and developer console.
-- [ ] Remote attestation issuance — GitHub creates the attestation when the exact `1.0.1` tag runs this workflow. The already-published 1.0.0 workflow did not contain this step.
+- [x] Remote attestation issuance — [release workflow 31037191887](https://github.com/alex3l3t33/knowledge-heatmap/actions/runs/31037191887) published 1.0.1 and attested all three assets. Independent `gh attestation verify` checks succeeded for `main.js`, `manifest.json`, and `styles.css` against `release.yml@refs/tags/1.0.1`.
 
 ## Validation checklist
 
@@ -40,9 +40,9 @@ Prepared: 2026-08-05
 - [x] Release assets verified — published `main.js`, `manifest.json`, and `styles.css` downloaded successfully and matched the local SHA-256 hashes.
 - [x] Obsidian automated submission review passed — confirmed by the repository owner on 2026-08-05.
 
-## Current release boundary
+## Published hardening release
 
-The hardening changes are prepared as version 1.0.1. They do not alter the already-published 1.0.0 assets or retroactively create an attestation for that release. Pushing the exact `1.0.1` tag runs the updated release workflow and issues verifiable attestations for the new assets.
+The hardening changes were published as [1.0.1](https://github.com/alex3l3t33/knowledge-heatmap/releases/tag/1.0.1) from commit `41d1542c96f1596ded858b926abc04c25ddc21a7`. The tag, release workflow, release assets, SHA-256 digests, and SLSA provenance attestations were independently verified. This does not alter the already-published 1.0.0 assets or retroactively create an attestation for that release.
 
 The initial commit still contains unrelated private artifacts in history. The owner made the repository public after this risk was reported. Those files are absent from the current tree, but no destructive history purge was performed because force-pushing and history rewriting were explicitly prohibited.
 
