@@ -15,7 +15,12 @@ Every result includes the factor contributions, a plain-language explanation, an
 ## Features
 
 - Health overview with healthy, stale, and forgotten categories.
-- Attention-first note and folder lists.
+- Clickable summary cards that immediately filter notes by health category.
+- Folder-grouped knowledge map with the weakest areas shown first.
+- Health, Freshness, and Connections visualization modes.
+- Numeric map cells with orphan and well-connected markers.
+- Detailed cell hover cards with score, age, words, backlinks, outgoing links, and the primary maintenance issue.
+- Clickable folder filters and direct note opening from map cells.
 - Search and category filters.
 - Per-note scoring breakdowns and suggested next steps.
 - Configurable recency, link, word-count, grace-period, exclusion, and refresh settings.
@@ -53,7 +58,17 @@ gh attestation verify main.js --repo alex3l3t33/knowledge-heatmap
 
 Open the dashboard from the activity ribbon or run **Knowledge Heatmap: Open dashboard** from the command palette.
 
-Start with the folders needing attention, then select a note to see:
+Start with the summary cards or weakest folder groups. Select **Healthy**, **Stale**, or **Forgotten** to filter the dashboard immediately, or select a folder heading to focus on that knowledge area.
+
+Switch the knowledge map between:
+
+- **Health:** overall maintenance score;
+- **Freshness:** time since the last modification; and
+- **Connections:** combined incoming and outgoing links.
+
+Each map cell displays the metric for the selected mode. The `⚠` marker identifies an orphan note and `✓` identifies a well-connected note. Hover or focus a cell to inspect its details, then select it to open the note.
+
+The detailed note list shows:
 
 - its score and category;
 - how age, links, and word count contributed;
@@ -149,6 +164,8 @@ npm run benchmark
 `npm run lint` treats every warning as a failure and first verifies that `@typescript-eslint/no-unsafe-call` and `@typescript-eslint/no-unsafe-return` are enabled at error severity. `npm run verify:release` checks version consistency, required release files, and their SHA-256 hashes.
 
 The test-vault scripts use the `knowledge-heatmap-test-vault` directory next to the repository and refuse to replace an existing unmarked directory. They generate synthetic content only; do not point them at a personal vault.
+
+The generated `Large/Batch-###` folders exist only to stress-test analysis and rendering with thousands of notes. They are not created in normal vaults. Exclude `Large` in the test-vault settings when validating visual design against only the curated fixtures.
 
 Contribution guidance is in [CONTRIBUTING.md](CONTRIBUTING.md). For bugs or feature requests, use the [GitHub issue tracker](https://github.com/alex3l3t33/knowledge-heatmap/issues) without attaching private vault content.
 

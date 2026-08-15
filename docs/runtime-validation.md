@@ -1,6 +1,6 @@
 # Runtime validation
 
-Validated: 2026-08-05 (release-hardening recheck; full acceptance pass completed 2026-08-04)
+Validated: 2026-08-15 (dashboard redesign and CSS recheck; full acceptance pass completed 2026-08-04)
 
 ## Test environment
 
@@ -11,6 +11,22 @@ Validated: 2026-08-05 (release-hardening recheck; full acceptance pass completed
 - Dataset: 5,011 synthetic Markdown notes and one non-Markdown file; one Markdown note excluded by default
 
 No private user content was copied into the test vault.
+
+## Dashboard redesign recheck — 2026-08-15
+
+The production bundle from `agent/improve-knowledge-map-dashboard` was built, installed in the marked `knowledge-heatmap-test-vault`, disabled and re-enabled to force a clean stylesheet reload, and inspected in Obsidian 1.13.7 on macOS.
+
+| Test | Result | Evidence |
+| --- | --- | --- |
+| Installed build | Pass | `main.js`, `manifest.json`, and `styles.css` in the test vault matched the project production files byte-for-byte. |
+| Full validation | Pass | Strict linting, TypeScript, 22 automated tests, production build, release verification, and `git diff --check` passed. |
+| Large-vault rendering | Pass | The redesigned dashboard completed analysis of 5,011 included notes and rendered bounded folder groups and note results. |
+| Visualization modes | Pass | Health, Freshness, and Connections controls and their legends rendered in the actual Obsidian modal. |
+| Semantic palette | Pass | Teal controls plus green, amber, and coral health indicators rendered independently of the vault accent color. |
+| Summary alignment | Pass after correction | Five equal-height cards rendered in one desktop row with values, labels, and actions contained inside each card. Medium and mobile breakpoints use three and one columns respectively. |
+| Accessibility | Pass | Summary cards, modes, folder headings, cells, note links, and refresh remain native keyboard-operable controls with visible focus states. |
+
+The `Large/Batch-###` fixtures deliberately provide scale for performance and bounded-rendering checks. They add noise to visual design review, so `Large` can be added to excluded folders when reviewing only the curated health examples.
 
 ## Release-hardening recheck — 2026-08-05
 

@@ -2,6 +2,18 @@
 
 All notable changes to Knowledge Heatmap are documented here.
 
+## Unreleased
+
+- Reworked the knowledge map into folder groups ordered by weakest average health.
+- Added Health, Freshness, and Connections visualization modes with explanatory legends.
+- Added numeric cell values, orphan and well-connected markers, detailed hover cards, and direct note opening.
+- Made summary cards clickable so Healthy, Stale, and Forgotten counts act as note filters.
+- Made folder headings clickable filters and retained search and category filtering.
+- Introduced a semantic teal, green, amber, and coral palette instead of relying on the vault accent color.
+- Improved focus states, hover feedback, responsive behavior, and narrow-screen controls.
+- Corrected summary-card alignment with an equal-height five-column desktop grid, three-column medium layout, and single-column mobile layout.
+- Visually validated the production bundle in Obsidian 1.13.7 with the dedicated 5,011-note test vault.
+
 ## 1.0.1 — 2026-08-05
 
 - Enforced zero-warning ESLint and explicit error-level checks for unsafe calls and returns.
