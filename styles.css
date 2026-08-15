@@ -60,22 +60,29 @@
 }
 
 .kh-summary {
+	display: grid;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
 	align-items: stretch;
-	flex-wrap: wrap;
 }
 
 .kh-summary-card {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
-	flex: 1 1 9rem;
-	min-width: 8rem;
+	justify-content: flex-start;
+	width: 100%;
+	min-width: 0;
+	min-height: 6.5rem;
+	height: auto;
 	padding: var(--size-4-3);
 	border: 1px solid var(--background-modifier-border);
 	border-radius: var(--radius-m);
 	background: var(--background-secondary);
+	box-sizing: border-box;
 	color: var(--text-normal);
+	line-height: 1.25;
 	text-align: start;
+	white-space: normal;
 	transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
 }
 
@@ -98,7 +105,8 @@
 }
 
 .kh-summary-action {
-	margin-block-start: var(--size-4-2);
+	margin-block-start: auto;
+	padding-block-start: var(--size-4-2);
 	color: var(--kh-accent);
 	font-size: var(--font-ui-smaller);
 }
@@ -389,4 +397,16 @@ button.kh-cell:focus-visible {
 	.kh-segmented button { flex: 1; }
 	.kh-map-cells { grid-template-columns: repeat(auto-fill, minmax(2rem, 1fr)); }
 	.kh-tooltip { width: min(18rem, 75vw); }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+	.kh-summary {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 600px) {
+	.kh-summary {
+		grid-template-columns: 1fr;
+	}
 }
