@@ -1,7 +1,7 @@
 {
 	"id": "knowledge-heatmap",
 	"name": "Knowledge Heatmap",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"minAppVersion": "1.5.12",
 	"description": "Review note health, staleness, connections, and maintenance priorities in a local visual dashboard.",
 	"author": "Alexandre CharByte",

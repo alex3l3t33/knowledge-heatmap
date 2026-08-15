@@ -1,6 +1,6 @@
 {
 	"name": "knowledge-heatmap",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "Review note health and maintenance priorities in Obsidian.",
 	"main": "main.js",
 	"type": "module",

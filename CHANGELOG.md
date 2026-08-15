@@ -2,7 +2,7 @@
 
 All notable changes to Knowledge Heatmap are documented here.
 
-## Unreleased
+## 1.0.2 — 2026-08-15
 
 - Reworked the knowledge map into folder groups ordered by weakest average health.
 - Added Health, Freshness, and Connections visualization modes with explanatory legends.
