@@ -2,6 +2,14 @@
 
 All notable changes to Knowledge Heatmap are documented here.
 
+## 1.0.3 — 2026-08-20
+
+- Kept knowledge-map hover cards fully inside the dashboard and viewport at the left, right, top, and bottom edges.
+- Positioned hover cards above or below cells according to the available space and updated their position while scrolling or resizing.
+- Added color-coded Healthy, Stale, and Forgotten badges to hover-card headers.
+- Removed the duplicate native tooltip while preserving descriptive labels for keyboard and assistive-technology users.
+- Added focused positioning tests and verified the release build in Obsidian 1.13.7 with the 5,011-note development vault.
+
 ## 1.0.2 — 2026-08-15
 
 - Reworked the knowledge map into folder groups ordered by weakest average health.
