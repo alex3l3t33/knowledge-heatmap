@@ -9,13 +9,20 @@ import {
 	AnalysisCancelledError,
 	KnowledgeDataService,
 } from "./data-service";
+import { calculateTooltipPosition } from "./tooltip-position";
 
 const PAGE_SIZE = 100;
 const MAX_MAP_CELLS = 500;
 const MAX_FOLDER_ROWS = 20;
+const TOOLTIP_GAP = 8;
+const TOOLTIP_MARGIN = 8;
 
 type StatusFilter = "all" | HealthStatus;
 type MapMode = "health" | "freshness" | "connections";
+interface ActiveMapTooltip {
+	anchor: HTMLButtonElement;
+	tooltip: HTMLDivElement;
+}
 
 function statusLabel(status: HealthStatus): string {
 	return status[0]?.toUpperCase() + status.slice(1);
@@ -41,6 +48,8 @@ export class KnowledgeHeatmapModal extends Modal {
 	private folderFilter: string | undefined;
 	private mapMode: MapMode = "health";
 	private visibleLimit = PAGE_SIZE;
+	private activeMapTooltip: ActiveMapTooltip | undefined;
+	private tooltipSequence = 0;
 	private closed = false;
 
 	constructor(
@@ -294,6 +303,15 @@ export class KnowledgeHeatmapModal extends Modal {
 
 	private renderNotes(snapshot: AnalysisSnapshot): void {
 		const scope = this.resetNotesScope();
+		scope.registerDomEvent(this.contentEl, "scroll", () => {
+			this.positionActiveMapTooltip();
+		});
+		const view = this.modalEl.ownerDocument.defaultView;
+		if (view) {
+			scope.registerDomEvent(view, "resize", () => {
+				this.positionActiveMapTooltip();
+			});
+		}
 		this.contentEl.querySelector("[data-kh-notes]")?.remove();
 		const section = this.contentEl.createDiv();
 		section.dataset["khNotes"] = "true";
@@ -368,21 +386,130 @@ export class KnowledgeHeatmapModal extends Modal {
 		const cell = parent.createEl("button", { cls: `kh-cell kh-level-${level}` });
 		cell.type = "button";
 		cell.setAttr("role", "listitem");
-		cell.setAttr("aria-label", `${note.metrics.path}: ${this.mapMode} ${value}. ${note.result.reason}`);
-		cell.createSpan({ cls: "kh-cell-value", text: String(value) });
-		if (orphan) cell.createSpan({ cls: "kh-cell-state", text: "⚠" });
-		else if (connected) cell.createSpan({ cls: "kh-cell-state", text: "✓" });
-		const tooltip = cell.createDiv({ cls: "kh-tooltip" });
-		tooltip.createEl("strong", { text: note.metrics.name });
+		this.tooltipSequence += 1;
+		const tooltipId = `kh-tooltip-${this.tooltipSequence}`;
+		const labelId = `kh-cell-label-${this.tooltipSequence}`;
+		const accessibleLabel = cell.createSpan({
+			cls: "kh-visually-hidden",
+			text: `${note.metrics.path}: ${this.mapMode} ${value}`,
+		});
+		accessibleLabel.id = labelId;
+		cell.setAttr("aria-labelledby", labelId);
+		cell.setAttr("aria-describedby", tooltipId);
+		const cellValue = cell.createSpan({ cls: "kh-cell-value", text: String(value) });
+		cellValue.setAttr("aria-hidden", "true");
+		if (orphan) {
+			cell.createSpan({ cls: "kh-cell-state", text: "⚠" }).setAttr("aria-hidden", "true");
+		} else if (connected) {
+			cell.createSpan({ cls: "kh-cell-state", text: "✓" }).setAttr("aria-hidden", "true");
+		}
+		const tooltip = cell.ownerDocument.body.createDiv({ cls: "kh-tooltip" });
+		tooltip.id = tooltipId;
+		tooltip.setAttr("role", "tooltip");
+		const tooltipHeader = tooltip.createDiv({ cls: "kh-tooltip-header" });
+		tooltipHeader.createEl("strong", { text: note.metrics.name });
+		tooltipHeader.createSpan({
+			cls: `kh-tooltip-badge kh-tooltip-badge--${note.result.status}`,
+			text: statusLabel(note.result.status),
+		});
 		tooltip.createSpan({ cls: "kh-tooltip-path", text: note.metrics.path });
 		const facts = tooltip.createDiv({ cls: "kh-tooltip-facts" });
-		for (const [label, valueText] of [["Health", `${note.result.score} · ${statusLabel(note.result.status)}`], ["Last modified", `${note.result.ageDays} days ago`], ["Words", note.metrics.wordCount.toLocaleString()], ["Backlinks", String(note.metrics.backlinks)], ["Outgoing", String(note.metrics.outlinks)]] as const) {
+		for (const [label, valueText] of [["Health", String(note.result.score)], ["Last modified", `${note.result.ageDays} days ago`], ["Words", note.metrics.wordCount.toLocaleString()], ["Backlinks", String(note.metrics.backlinks)], ["Outgoing", String(note.metrics.outlinks)]] as const) {
 			facts.createSpan({ text: label }); facts.createSpan({ text: valueText });
 		}
 		tooltip.createEl("strong", { text: "Main issue" });
 		tooltip.createSpan({ text: note.result.reason });
 		tooltip.createSpan({ cls: "kh-tooltip-action", text: "Click to open" });
-		scope.registerDomEvent(cell, "click", () => void this.openNote(note.metrics.path));
+		let hovered = false;
+		let focused = false;
+		const hideIfInactive = (): void => {
+			if (!hovered && !focused) this.hideMapTooltip(tooltip);
+		};
+		scope.registerDomEvent(cell, "mouseenter", () => {
+			hovered = true;
+			this.showMapTooltip(cell, tooltip);
+		});
+		scope.registerDomEvent(cell, "mouseleave", () => {
+			hovered = false;
+			hideIfInactive();
+		});
+		scope.registerDomEvent(cell, "focus", () => {
+			focused = true;
+			this.showMapTooltip(cell, tooltip);
+		});
+		scope.registerDomEvent(cell, "blur", () => {
+			focused = false;
+			hideIfInactive();
+		});
+		scope.registerDomEvent(cell, "click", () => {
+			this.hideMapTooltip(tooltip);
+			void this.openNote(note.metrics.path);
+		});
+		scope.register(() => {
+			this.hideMapTooltip(tooltip);
+			tooltip.remove();
+		});
+	}
+
+	private showMapTooltip(anchor: HTMLButtonElement, tooltip: HTMLDivElement): void {
+		if (this.activeMapTooltip?.tooltip !== tooltip) {
+			this.activeMapTooltip?.tooltip.removeClass("is-visible");
+		}
+		this.activeMapTooltip = { anchor, tooltip };
+		tooltip.addClass("is-measuring");
+		tooltip.addClass("is-visible");
+		this.positionActiveMapTooltip();
+		if (this.activeMapTooltip?.tooltip === tooltip) {
+			tooltip.removeClass("is-measuring");
+		}
+	}
+
+	private hideMapTooltip(tooltip: HTMLDivElement): void {
+		tooltip.removeClass("is-visible");
+		tooltip.removeClass("is-measuring");
+		if (this.activeMapTooltip?.tooltip === tooltip) {
+			this.activeMapTooltip = undefined;
+		}
+	}
+
+	private positionActiveMapTooltip(): void {
+		const active = this.activeMapTooltip;
+		const view = this.modalEl.ownerDocument.defaultView;
+		if (!active || !view) return;
+
+		const contentRect = this.contentEl.getBoundingClientRect();
+		const bounds = {
+			top: Math.max(TOOLTIP_MARGIN, contentRect.top + TOOLTIP_MARGIN),
+			right: Math.min(view.innerWidth - TOOLTIP_MARGIN, contentRect.right - TOOLTIP_MARGIN),
+			bottom: Math.min(view.innerHeight - TOOLTIP_MARGIN, contentRect.bottom - TOOLTIP_MARGIN),
+			left: Math.max(TOOLTIP_MARGIN, contentRect.left + TOOLTIP_MARGIN),
+		};
+		if (bounds.right <= bounds.left || bounds.bottom <= bounds.top) {
+			this.hideMapTooltip(active.tooltip);
+			return;
+		}
+
+		const anchorRect = active.anchor.getBoundingClientRect();
+		if (
+			anchorRect.right < bounds.left ||
+			anchorRect.left > bounds.right ||
+			anchorRect.bottom < bounds.top ||
+			anchorRect.top > bounds.bottom
+		) {
+			this.hideMapTooltip(active.tooltip);
+			return;
+		}
+
+		active.tooltip.style.maxWidth = `${Math.floor(bounds.right - bounds.left)}px`;
+		const tooltipRect = active.tooltip.getBoundingClientRect();
+		const position = calculateTooltipPosition(
+			anchorRect,
+			tooltipRect,
+			bounds,
+			TOOLTIP_GAP,
+		);
+		active.tooltip.style.left = `${Math.round(position.left)}px`;
+		active.tooltip.style.top = `${Math.round(position.top)}px`;
 	}
 
 	private renderNote(scope: Component, list: HTMLUListElement, note: NoteHealth): void {
@@ -489,6 +616,9 @@ export class KnowledgeHeatmapModal extends Modal {
 	}
 
 	private disposeNotesScope(): void {
+		if (this.activeMapTooltip) {
+			this.hideMapTooltip(this.activeMapTooltip.tooltip);
+		}
 		this.notesScope?.unload();
 		this.notesScope = undefined;
 	}

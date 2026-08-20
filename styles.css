@@ -227,29 +227,51 @@ button.kh-cell:focus-visible {
 }
 
 .kh-cell-state { position: absolute; inset-block-start: 1px; inset-inline-end: 3px; font-size: 0.6rem; }
+.kh-visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
 .kh-tooltip {
 	display: none;
-	position: absolute;
-	z-index: 20;
-	inset-block-end: calc(100% + 8px);
-	inset-inline-start: 50%;
+	position: fixed;
+	z-index: var(--layer-tooltip, 70);
 	width: 18rem;
+	max-width: calc(100vw - 1rem);
 	padding: var(--size-4-3);
-	transform: translateX(-50%);
 	border: 1px solid var(--background-modifier-border);
-	border-radius: var(--kh-radius);
+	border-radius: var(--kh-radius, var(--radius-m));
 	background: var(--background-primary);
 	box-shadow: var(--shadow-l);
+	box-sizing: border-box;
 	color: var(--text-normal);
 	font-weight: normal;
+	pointer-events: none;
 	text-align: start;
 }
-.kh-cell:hover .kh-tooltip,
-.kh-cell:focus-visible .kh-tooltip { display: flex; flex-direction: column; gap: var(--size-4-2); }
+.kh-tooltip.is-visible { display: flex; flex-direction: column; gap: var(--size-4-2); }
+.kh-tooltip.is-measuring { visibility: hidden; }
+.kh-tooltip-header { display: flex; align-items: center; justify-content: space-between; gap: var(--size-4-2); }
+.kh-tooltip-badge {
+	padding: 2px var(--size-4-2);
+	border-radius: 999px;
+	color: white;
+	font-size: var(--font-ui-smaller);
+	font-weight: var(--font-semibold);
+	line-height: 1.4;
+}
+.kh-tooltip-badge--healthy { background: var(--kh-healthy, #2f9e74); }
+.kh-tooltip-badge--stale { background: var(--kh-stale, #d49a24); }
+.kh-tooltip-badge--forgotten { background: var(--kh-forgotten, #d95757); }
 .kh-tooltip-path { overflow: hidden; color: var(--text-muted); text-overflow: ellipsis; white-space: nowrap; }
 .kh-tooltip-facts { display: grid; grid-template-columns: 1fr auto; gap: 3px var(--size-4-3); }
 .kh-tooltip-facts span:nth-child(odd) { color: var(--text-muted); }
-.kh-tooltip-action { color: var(--kh-accent); font-weight: var(--font-semibold); }
+.kh-tooltip-action { color: var(--kh-accent, var(--text-accent)); font-weight: var(--font-semibold); }
 
 .knowledge-heatmap-modal button.mod-cta {
 	background: var(--kh-accent);
