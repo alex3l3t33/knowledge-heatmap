@@ -1,0 +1,60 @@
+name: Publish UI release 1.0.4
+
+on:
+    push:
+        branches:
+            - main
+        paths:
+            - .github/workflows/publish-ui-1.0.4.yml
+
+permissions:
+    contents: write
+    id-token: write
+    attestations: write
+
+concurrency:
+    group: publish-knowledge-heatmap-1.0.4
+    cancel-in-progress: false
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out release commit
+              uses: actions/checkout@v6
+            - name: Use Node.js 24
+              uses: actions/setup-node@v6
+              with:
+                  node-version: 24
+                  cache: npm
+            - name: Install dependencies
+              run: npm ci
+            - name: Validate release
+              env:
+                  RELEASE_TAG: 1.0.4
+              run: npm run validate
+            - name: Attest release assets
+              uses: actions/attest@v4
+              with:
+                  subject-path: |
+                      ${{ github.workspace }}/main.js
+                      ${{ github.workspace }}/manifest.json
+                      ${{ github.workspace }}/styles.css
+            - name: Publish 1.0.4 assets
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  cat > "$RUNNER_TEMP/release-notes.md" <<'NOTES'
+                  Responsive dashboard UI update with refined cards, theme-aware panels, map controls, and keyboard focus.
+
+                  - Desktop, tablet, and phone layouts.
+                  - Reduced-motion support and larger mobile controls.
+                  - Scoring, vault access, caching, and plugin lifecycle unchanged.
+                  - Lint, type checking, 27 tests, build, and release checks passed locally.
+                  - Six viewport widths checked in light and dark themes using the dashboard renderer with an Obsidian API fixture. Native Obsidian testing remains pending.
+
+                  Install or update using the attached main.js, manifest.json, and styles.css files. Preserve your existing data.json settings.
+                  NOTES
+                  gh release create 1.0.4 main.js manifest.json styles.css \
+                    --target "$GITHUB_SHA" --title "1.0.4" \
+                    --notes-file "$RUNNER_TEMP/release-notes.md"

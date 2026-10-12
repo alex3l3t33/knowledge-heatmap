@@ -2,6 +2,15 @@
 
 All notable changes to Knowledge Heatmap are documented here.
 
+## 1.0.4 - 2026-10-12
+
+- Refined dashboard typography, summary cards, panels, note details, and map controls.
+- Adapted surfaces to Obsidian theme colors and corrected legend background rendering.
+- Added compact two-column mobile summaries, larger mobile controls, visible keyboard focus, and reduced-motion support.
+- Preserved scoring, vault access, caching, tooltip positioning, and CI/release workflows.
+- Passed 27 tests, lint, type checking, production build and release verification.
+- Checked six widths from 320 to 1280 pixels in both themes using the actual dashboard renderer with an Obsidian API fixture. Native Obsidian testing remains pending.
+
 ## 1.0.3 — 2026-08-20
 
 - Kept knowledge-map hover cards fully inside the dashboard and viewport at the left, right, top, and bottom edges.
