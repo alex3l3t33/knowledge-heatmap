@@ -1,538 +1,214 @@
+/* Knowledge Heatmap design system. Dashboard rules are scoped to the plugin modal. */
 .knowledge-heatmap-modal {
-	--kh-accent: #278f83;
-	--kh-accent-hover: #21786f;
-	--kh-accent-soft: rgb(39 143 131 / 14%);
-	--kh-healthy: #2f9e74;
-	--kh-stale: #d49a24;
-	--kh-forgotten: #d95757;
-	--kh-fresh: #2f9e74;
-	--kh-aging: #d98032;
-	--kh-old: #d95757;
-	--kh-connected: #2b8fa3;
-	--kh-some-links: #5d83a6;
-	--kh-orphan: #d95757;
-	--kh-radius: 16px;
-	--kh-panel: var(--background-primary);
-	--kh-border: var(--background-modifier-border);
-	--kh-shadow: 0 4px 18px rgb(0 0 0 / 4%);
-	width: min(94vw, 1180px);
-	box-sizing: border-box;
-	max-height: 94vh;
-	max-height: 94dvh;
-	border-radius: 20px;
-	padding: clamp(16px, 3vw, 28px);
+	--kh-font: var(--font-interface, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif);
+	--kh-r-sm: 8px; --kh-r-md: 12px; --kh-r-lg: 18px; --kh-r-xl: 24px;
+	--kh-bg: var(--background-primary); --kh-bg-2: var(--background-secondary);
+	--kh-surface: var(--background-primary-alt, var(--background-primary));
+	--kh-raised: var(--background-primary); --kh-border: var(--background-modifier-border);
+	--kh-text: var(--text-normal); --kh-muted: var(--text-muted); --kh-faint: var(--text-faint, var(--text-muted));
+	--kh-accent: var(--interactive-accent, #278f83); --kh-accent-hover: var(--interactive-accent-hover, #21786f);
+	--kh-accent-soft: var(--background-modifier-hover);
+	--kh-accent-soft: color-mix(in srgb, var(--kh-accent) 12%, var(--kh-bg));
+	--kh-accent-border: var(--kh-border);
+	--kh-accent-border: color-mix(in srgb, var(--kh-accent) 34%, var(--kh-border));
+	--kh-healthy: #2e9d74; --kh-stale: #cc8b20; --kh-forgotten: #d95763;
+	--kh-connected: #278da2; --kh-some-links: #5e7fa3;
+	--kh-shadow-s: 0 1px 2px rgb(0 0 0 / 6%), 0 4px 12px rgb(0 0 0 / 4%);
+	--kh-shadow-m: 0 2px 4px rgb(0 0 0 / 7%), 0 12px 30px rgb(0 0 0 / 7%);
+	--kh-shadow-l: 0 3px 8px rgb(0 0 0 / 8%), 0 22px 56px rgb(0 0 0 / 10%);
+	width: min(94vw, 1240px); max-height: 94dvh; padding: 0; overflow: hidden;
+	border: 1px solid var(--kh-border); border-radius: 24px; background: var(--kh-bg);
+	box-shadow: var(--kh-shadow-l); box-sizing: border-box; color: var(--kh-text);
+	font-family: var(--kh-font); line-height: 1.5; -webkit-font-smoothing: antialiased;
 }
-
+.theme-dark .knowledge-heatmap-modal {
+	--kh-raised: color-mix(in srgb, var(--background-primary) 94%, white 6%);
+	--kh-shadow-s: 0 1px 2px rgb(0 0 0 / 22%), 0 5px 16px rgb(0 0 0 / 16%);
+	--kh-shadow-m: 0 2px 5px rgb(0 0 0 / 25%), 0 14px 34px rgb(0 0 0 / 20%);
+	--kh-shadow-l: 0 4px 10px rgb(0 0 0 / 28%), 0 24px 64px rgb(0 0 0 / 26%);
+}
+.knowledge-heatmap-modal *, .knowledge-heatmap-modal *::before, .knowledge-heatmap-modal *::after { box-sizing: border-box; }
+.knowledge-heatmap-modal .modal-title, .knowledge-heatmap-modal .kh-visually-hidden {
+	position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden;
+	clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+.knowledge-heatmap-modal .modal-close-button { z-index: 5; top: 18px; right: 18px; width: 40px; height: 40px; border-radius: var(--kh-r-md); color: var(--kh-muted); }
+.knowledge-heatmap-modal .modal-close-button:hover { background: var(--kh-accent-soft); color: var(--kh-accent); }
 .knowledge-heatmap-modal .modal-content {
-	display: flex;
-	flex-direction: column;
-	gap: 20px;
-	max-height: 78vh;
-	max-height: min(78vh, calc(100dvh - 130px));
-	scrollbar-gutter: stable;
-	line-height: 1.5;
-	overflow-y: auto;
+	display: flex; max-height: 94dvh; flex-direction: column; gap: clamp(24px, 3vw, 36px);
+	margin: 0; padding: clamp(20px, 3.4vw, 42px); padding-bottom: clamp(36px, 5vw, 64px);
+	overflow-y: auto; scrollbar-gutter: stable;
 }
+.knowledge-heatmap-modal :where(h1, h2, h3, p) { margin: 0; }
+.knowledge-heatmap-modal :where(button, input, select) { font: inherit; }
+.knowledge-heatmap-modal button { -webkit-tap-highlight-color: transparent; }
+.knowledge-heatmap-modal svg, .kh-tooltip svg { display: block; width: 1em; height: 1em; flex: 0 0 auto; stroke-width: 1.9; }
+.knowledge-heatmap-modal :where(button, input, select, summary):focus-visible { outline: 3px solid color-mix(in srgb, var(--kh-accent) 50%, transparent); outline-offset: 3px; }
+.knowledge-heatmap-modal .kh-eyebrow { color: var(--kh-muted); font-size: .7rem; font-weight: 750; letter-spacing: .105em; line-height: 1.25; text-transform: uppercase; }
+.knowledge-heatmap-modal :where(.kh-muted, .kh-meta, .kh-note-path) { color: var(--kh-muted); }
+.knowledge-heatmap-modal .kh-inline-icon { display: inline-flex; align-items: center; justify-content: center; }
 
-.kh-intro,
-.kh-muted,
-.kh-meta,
-.kh-note-path {
-	color: var(--text-muted);
+/* Header */
+.knowledge-heatmap-modal .kh-app-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding-right: 42px; }
+.knowledge-heatmap-modal .kh-brand { display: flex; min-width: 0; align-items: center; gap: 12px; }
+.knowledge-heatmap-modal .kh-brand-mark {
+	position: relative; display: flex; width: 48px; height: 48px; flex: 0 0 auto; align-items: center;
+	justify-content: center; overflow: hidden; border: 1px solid color-mix(in srgb, var(--kh-accent) 45%, var(--kh-border));
+	border-radius: 15px; background: radial-gradient(circle at 28% 20%, rgb(255 255 255 / 30%), transparent 38%), linear-gradient(145deg, var(--kh-accent), var(--kh-accent-hover));
+	color: var(--text-on-accent, #fff); box-shadow: 0 8px 22px color-mix(in srgb, var(--kh-accent) 26%, transparent);
 }
+.knowledge-heatmap-modal .kh-brand-mark::after { position: absolute; right: -10px; bottom: -12px; width: 31px; height: 31px; border: 1px solid rgb(255 255 255 / 24%); border-radius: 50%; content: ""; }
+.knowledge-heatmap-modal .kh-brand-icon svg { width: 24px; height: 24px; stroke-width: 2.1; }
+.knowledge-heatmap-modal .kh-brand-copy p { margin-bottom: 2px; color: var(--kh-muted); font-size: .68rem; font-weight: 680; letter-spacing: .045em; text-transform: uppercase; }
+.knowledge-heatmap-modal .kh-brand-copy h1 { font-size: clamp(1.25rem, 2.2vw, 1.58rem); font-weight: 780; letter-spacing: -.04em; line-height: 1.1; }
+.knowledge-heatmap-modal .kh-header-actions { display: flex; align-items: center; gap: 12px; }
+.knowledge-heatmap-modal :where(.kh-local-badge, .kh-count-badge, .kh-health-pill, .kh-note-status) { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: 999px; font-size: .7rem; font-weight: 750; line-height: 1; white-space: nowrap; }
+.knowledge-heatmap-modal .kh-local-badge { min-height: 29px; padding: 7px 11px; border: 1px solid var(--kh-accent-border); background: var(--kh-accent-soft); color: var(--kh-accent); }
+.knowledge-heatmap-modal .kh-icon-button { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; margin: 0; padding: 0; border: 1px solid var(--kh-border); border-radius: var(--kh-r-md); background: var(--kh-raised); color: var(--kh-muted); box-shadow: var(--kh-shadow-s); cursor: pointer; transition: 160ms ease; }
+.knowledge-heatmap-modal .kh-icon-button:hover { border-color: var(--kh-accent-border); background: var(--kh-accent-soft); color: var(--kh-accent); transform: translateY(-1px); }
 
-.kh-toolbar,
-.kh-summary,
-.kh-legend,
-.kh-note-heading,
-.kh-folder-row,
-.kh-progress-row {
-	display: flex;
-	align-items: center;
-	gap: var(--size-4-3);
+/* Overview */
+.knowledge-heatmap-modal .kh-overview-grid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(390px, .92fr); gap: 20px; align-items: stretch; }
+.knowledge-heatmap-modal :where(.kh-health-card, .kh-summary-card) { position: relative; margin: 0; overflow: hidden; border: 1px solid var(--kh-border); background: var(--kh-raised); color: var(--kh-text); text-align: left; box-shadow: var(--kh-shadow-s); cursor: pointer; transition: transform 170ms ease, box-shadow 170ms ease, border-color 170ms ease; }
+.knowledge-heatmap-modal .kh-health-card { --kh-health: var(--kh-healthy); isolation: isolate; display: flex; min-height: 258px; flex-direction: column; justify-content: space-between; padding: clamp(23px, 3vw, 32px); border-radius: var(--kh-r-xl); background: linear-gradient(135deg, color-mix(in srgb, var(--kh-health) 10%, var(--kh-raised)), var(--kh-raised) 58%, color-mix(in srgb, var(--kh-accent) 7%, var(--kh-raised))); white-space: normal; }
+.knowledge-heatmap-modal .kh-health-card:hover, .knowledge-heatmap-modal .kh-health-card.is-active { border-color: color-mix(in srgb, var(--kh-health) 42%, var(--kh-border)); box-shadow: var(--kh-shadow-m); transform: translateY(-2px); }
+.knowledge-heatmap-modal .kh-health-card-glow { position: absolute; z-index: -1; top: -100px; right: -72px; width: 275px; height: 275px; border-radius: 50%; background: color-mix(in srgb, var(--kh-health) 17%, transparent); }
+.knowledge-heatmap-modal .kh-health-card-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: center; }
+.knowledge-heatmap-modal .kh-health-score-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px; }
+.knowledge-heatmap-modal .kh-health-score-row > strong { font-size: clamp(3rem, 7vw, 4.55rem); font-variant-numeric: tabular-nums; font-weight: 760; letter-spacing: -.075em; line-height: .96; }
+.knowledge-heatmap-modal .kh-health-pill { min-height: 27px; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--kh-health) 38%, var(--kh-border)); background: color-mix(in srgb, var(--kh-health) 11%, var(--kh-raised)); color: var(--kh-health); }
+.knowledge-heatmap-modal .kh-health-description { max-width: 52ch; margin-top: 16px; color: var(--kh-muted); font-size: .86rem; line-height: 1.65; white-space: normal; }
+.knowledge-heatmap-modal .kh-health-ring { position: relative; display: grid; width: clamp(108px, 12vw, 136px); aspect-ratio: 1; place-items: center; border-radius: 50%; background: conic-gradient(var(--kh-health) 0deg var(--kh-score-progress), color-mix(in srgb, var(--kh-border) 76%, transparent) var(--kh-score-progress) 360deg); box-shadow: 0 16px 36px color-mix(in srgb, var(--kh-health) 18%, transparent); }
+.knowledge-heatmap-modal .kh-health-ring::before { position: absolute; width: 78%; aspect-ratio: 1; border: 1px solid var(--kh-border); border-radius: 50%; background: var(--kh-raised); content: ""; }
+.knowledge-heatmap-modal .kh-health-ring-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--kh-health); }
+.knowledge-heatmap-modal .kh-health-ring-icon svg { width: 27px; height: 27px; }
+.knowledge-heatmap-modal .kh-health-ring-inner span:last-child { font-size: .59rem; font-weight: 760; letter-spacing: .09em; text-transform: uppercase; }
+.knowledge-heatmap-modal .kh-health-breakdown { display: flex; height: 8px; gap: 3px; margin-top: 32px; overflow: hidden; border-radius: 999px; background: var(--kh-border); }
+.knowledge-heatmap-modal .kh-health-breakdown span { min-width: 4px; border-radius: 999px; }
+.knowledge-heatmap-modal .kh-breakdown-healthy { background: var(--kh-healthy); }
+.knowledge-heatmap-modal .kh-breakdown-stale { background: var(--kh-stale); }
+.knowledge-heatmap-modal .kh-breakdown-forgotten { background: var(--kh-forgotten); }
+.knowledge-heatmap-modal .kh-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.knowledge-heatmap-modal .kh-summary-card { --kh-tone: var(--kh-accent); display: flex; min-width: 0; min-height: 122px; flex-direction: column; align-items: stretch; padding: 15px; border-radius: var(--kh-r-lg); background: radial-gradient(circle at 100% 0, color-mix(in srgb, var(--kh-tone) 13%, transparent), transparent 52%), var(--kh-raised); }
+.knowledge-heatmap-modal .kh-summary-card--healthy { --kh-tone: var(--kh-healthy); } .knowledge-heatmap-modal .kh-summary-card--stale { --kh-tone: var(--kh-stale); } .knowledge-heatmap-modal .kh-summary-card--forgotten { --kh-tone: var(--kh-forgotten); }
+.knowledge-heatmap-modal .kh-summary-card::after { position: absolute; bottom: 0; left: 15px; width: 30px; height: 3px; border-radius: 999px 999px 0 0; background: var(--kh-tone); content: ""; transition: width 180ms ease; }
+.knowledge-heatmap-modal .kh-summary-card:hover, .knowledge-heatmap-modal .kh-summary-card.is-active { border-color: color-mix(in srgb, var(--kh-tone) 48%, var(--kh-border)); box-shadow: var(--kh-shadow-m); transform: translateY(-2px); }
+.knowledge-heatmap-modal .kh-summary-card:hover::after, .knowledge-heatmap-modal .kh-summary-card.is-active::after { width: calc(100% - 30px); }
+.knowledge-heatmap-modal .kh-summary-card-top { display: flex; align-items: center; justify-content: space-between; }
+.knowledge-heatmap-modal .kh-summary-icon { display: inline-flex; width: 31px; height: 31px; align-items: center; justify-content: center; border: 1px solid color-mix(in srgb, var(--kh-tone) 24%, transparent); border-radius: 10px; background: color-mix(in srgb, var(--kh-tone) 12%, var(--kh-raised)); color: var(--kh-tone); }
+.knowledge-heatmap-modal .kh-summary-icon svg { width: 16px; height: 16px; } .knowledge-heatmap-modal .kh-summary-arrow { color: var(--kh-faint); opacity: .45; }
+.knowledge-heatmap-modal .kh-summary-value { margin-top: 11px; font-size: 1.62rem; font-variant-numeric: tabular-nums; font-weight: 760; letter-spacing: -.055em; line-height: 1; }
+.knowledge-heatmap-modal .kh-summary-label { margin-top: 5px; font-size: .78rem; font-weight: 710; } .knowledge-heatmap-modal .kh-summary-hint { margin-top: 3px; overflow: hidden; color: var(--kh-muted); font-size: .64rem; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Controls and section headings */
+.knowledge-heatmap-modal :where(.kh-controls-card, .kh-surface) { border: 1px solid var(--kh-border); border-radius: var(--kh-r-xl); background: var(--kh-raised); box-shadow: var(--kh-shadow-s); }
+.knowledge-heatmap-modal .kh-controls-card { padding: clamp(18px, 2.6vw, 26px); }
+.knowledge-heatmap-modal :where(.kh-controls-heading, .kh-section-heading) { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+.knowledge-heatmap-modal .kh-controls-heading h2, .knowledge-heatmap-modal .kh-section-title { margin-top: 3px; font-size: clamp(1.15rem, 2vw, 1.42rem); font-weight: 740; letter-spacing: -.04em; line-height: 1.2; }
+.knowledge-heatmap-modal .kh-controls-heading > p { max-width: 48ch; color: var(--kh-muted); font-size: .72rem; text-align: right; }
+.knowledge-heatmap-modal .kh-toolbar { display: grid; grid-template-columns: minmax(260px, 1fr) minmax(190px, .38fr); gap: 12px; margin-top: 20px; }
+.knowledge-heatmap-modal .kh-field { display: flex; min-width: 0; flex-direction: column; gap: 7px; }
+.knowledge-heatmap-modal .kh-field-label { color: var(--kh-muted); font-size: .66rem; font-weight: 700; letter-spacing: .025em; }
+.knowledge-heatmap-modal .kh-input-shell { position: relative; display: flex; align-items: center; }
+.knowledge-heatmap-modal .kh-field-icon { position: absolute; z-index: 1; left: 12px; color: var(--kh-muted); pointer-events: none; }
+.knowledge-heatmap-modal .kh-field-icon svg { width: 15px; height: 15px; }
+.knowledge-heatmap-modal .kh-input-shell :where(input, select) { width: 100%; height: 42px; margin: 0; padding-left: 36px; border: 1px solid var(--kh-border); border-radius: var(--kh-r-md); background: var(--kh-bg-2); color: var(--kh-text); box-shadow: none; }
+.knowledge-heatmap-modal .kh-input-shell :where(input, select):focus { border-color: var(--kh-accent-border); background: var(--kh-bg); }
+
+/* Map */
+.knowledge-heatmap-modal .kh-map-header .kh-muted, .knowledge-heatmap-modal .kh-notes-heading .kh-muted { display: block; max-width: 68ch; margin-top: 5px; font-size: .74rem; }
+.knowledge-heatmap-modal .kh-segmented { display: flex; padding: 3px; border: 1px solid var(--kh-border); border-radius: var(--kh-r-md); background: var(--kh-bg-2); }
+.knowledge-heatmap-modal .kh-segmented button { min-height: 36px; margin: 0; padding: 7px 14px; border: 0; border-radius: 9px; background: transparent; color: var(--kh-muted); box-shadow: none; font-size: var(--font-ui-small); font-weight: 680; cursor: pointer; }
+.knowledge-heatmap-modal .kh-segmented button.is-active { background: var(--kh-raised); color: var(--kh-accent); box-shadow: var(--kh-shadow-s); }
+.knowledge-heatmap-modal .kh-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; margin-top: -20px; color: var(--kh-muted); font-size: var(--font-ui-small); }
+.knowledge-heatmap-modal .kh-legend-item::before { display: inline-block; width: .68rem; height: .68rem; margin-right: 6px; border-radius: 3px; content: ""; vertical-align: -1px; }
+.knowledge-heatmap-modal .kh-legend-item { background: transparent; color: var(--kh-muted); }
+.knowledge-heatmap-modal .kh-level-healthy::before, .knowledge-heatmap-modal .kh-level-healthy, .knowledge-heatmap-modal .kh-level-fresh::before, .knowledge-heatmap-modal .kh-level-fresh { background: var(--kh-healthy); }
+.knowledge-heatmap-modal .kh-level-stale::before, .knowledge-heatmap-modal .kh-level-stale, .knowledge-heatmap-modal .kh-level-aging::before, .knowledge-heatmap-modal .kh-level-aging { background: var(--kh-stale); }
+.knowledge-heatmap-modal .kh-level-forgotten::before, .knowledge-heatmap-modal .kh-level-forgotten, .knowledge-heatmap-modal .kh-level-old::before, .knowledge-heatmap-modal .kh-level-old, .knowledge-heatmap-modal .kh-level-orphan::before, .knowledge-heatmap-modal .kh-level-orphan { background: var(--kh-forgotten); }
+.knowledge-heatmap-modal .kh-level-connected::before, .knowledge-heatmap-modal .kh-level-connected { background: var(--kh-connected); } .knowledge-heatmap-modal .kh-level-some-links::before, .knowledge-heatmap-modal .kh-level-some-links { background: var(--kh-some-links); }
+.knowledge-heatmap-modal .kh-legend .kh-legend-item { background: transparent; color: var(--kh-muted); }
+.knowledge-heatmap-modal .kh-map { display: flex; flex-direction: column; gap: 16px; margin: 16px 0 32px; padding: clamp(16px, 2.4vw, 24px); }
+.knowledge-heatmap-modal .kh-map-group { display: flex; flex-direction: column; gap: 10px; } .knowledge-heatmap-modal .kh-map-group + .kh-map-group { padding-top: 15px; border-top: 1px solid var(--kh-border); }
+.knowledge-heatmap-modal .kh-map-group-heading { display: flex; width: 100%; min-height: 32px; align-items: center; justify-content: space-between; gap: 12px; margin: 0; padding: 0; border: 0; background: transparent; color: var(--kh-muted); box-shadow: none; font-size: .72rem; text-align: left; white-space: normal; cursor: pointer; }
+.knowledge-heatmap-modal .kh-map-group-heading:hover { color: var(--kh-accent); }
+.knowledge-heatmap-modal .kh-folder-copy { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.knowledge-heatmap-modal .kh-folder-name { overflow-wrap: anywhere; color: var(--kh-text); font-size: .78rem; font-weight: 720; }
+.knowledge-heatmap-modal .kh-folder-count { color: var(--kh-muted); font-size: .64rem; }
+.knowledge-heatmap-modal .kh-folder-health { display: flex; flex: 0 0 auto; align-items: center; gap: 10px; }
+.knowledge-heatmap-modal .kh-folder-distribution { display: flex; width: clamp(90px, 13vw, 150px); height: 6px; gap: 2px; overflow: hidden; border-radius: 999px; background: var(--kh-border); }
+.knowledge-heatmap-modal .kh-folder-distribution > span { min-width: 3px; border-radius: 999px; }
+.knowledge-heatmap-modal .kh-folder-healthy { background: var(--kh-healthy); }
+.knowledge-heatmap-modal .kh-folder-stale { background: var(--kh-stale); }
+.knowledge-heatmap-modal .kh-folder-forgotten { background: var(--kh-forgotten); }
+.knowledge-heatmap-modal .kh-folder-average { min-width: 48px; color: var(--kh-muted); font-variant-numeric: tabular-nums; text-align: right; }
+.knowledge-heatmap-modal .kh-map-cells { display: grid; grid-template-columns: repeat(auto-fill, minmax(2.4rem, 1fr)); gap: .4rem; }
+.knowledge-heatmap-modal button.kh-cell { position: relative; min-width: 2.4rem; height: 2.4rem; margin: 0; padding: 0; border: 1px solid var(--kh-border); border-radius: 9px; color: #fff; box-shadow: inset 0 1px 0 rgb(255 255 255 / 14%); font-size: var(--font-ui-smaller); font-variant-numeric: tabular-nums; font-weight: 720; text-shadow: 0 1px 2px rgb(0 0 0 / 55%); cursor: pointer; transition: transform 120ms ease, filter 120ms ease; }
+.knowledge-heatmap-modal button.kh-cell:hover, .knowledge-heatmap-modal button.kh-cell:focus-visible { z-index: 1; transform: scale(1.1); filter: brightness(1.08); }
+.knowledge-heatmap-modal button.kh-level-stale, .knowledge-heatmap-modal button.kh-level-aging { color: #201600; text-shadow: none; } .knowledge-heatmap-modal .kh-cell-state { position: absolute; top: 1px; right: 3px; font-size: .58rem; }
+.knowledge-heatmap-modal .kh-map-more { min-width: 2.4rem; height: 2.4rem; margin: 0; padding: 0 8px; border: 1px dashed var(--kh-accent-border); border-radius: 9px; background: var(--kh-accent-soft); color: var(--kh-accent); box-shadow: none; font-size: var(--font-ui-smaller); font-weight: 720; cursor: pointer; }
+.knowledge-heatmap-modal .kh-map-more:hover { border-style: solid; background: var(--kh-raised); }
+
+/* Note list */
+.knowledge-heatmap-modal .kh-notes-heading { margin-bottom: 16px; } .knowledge-heatmap-modal .kh-title-row { display: flex; align-items: center; gap: 8px; } .knowledge-heatmap-modal .kh-title-row .kh-section-title { margin: 0; }
+.knowledge-heatmap-modal .kh-count-badge { min-width: 26px; min-height: 26px; padding: 5px 8px; border: 1px solid var(--kh-accent-border); background: var(--kh-accent-soft); color: var(--kh-accent); font-variant-numeric: tabular-nums; }
+.knowledge-heatmap-modal :where(.kh-note-list, .kh-factor-list) { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.knowledge-heatmap-modal .kh-note-card { --kh-tone: var(--kh-healthy); position: relative; display: flex; min-width: 0; flex-direction: column; gap: 12px; padding: 18px 20px; overflow: hidden; border: 1px solid var(--kh-border); border-radius: var(--kh-r-lg); background: var(--kh-raised); box-shadow: var(--kh-shadow-s); transition: 170ms ease; }
+.knowledge-heatmap-modal .kh-note-card--stale { --kh-tone: var(--kh-stale); } .knowledge-heatmap-modal .kh-note-card--forgotten { --kh-tone: var(--kh-forgotten); }
+.knowledge-heatmap-modal .kh-note-card::before { position: absolute; top: 16px; bottom: 16px; left: 0; width: 3px; border-radius: 0 999px 999px 0; background: var(--kh-tone); content: ""; }
+.knowledge-heatmap-modal .kh-note-card:hover { border-color: color-mix(in srgb, var(--kh-tone) 30%, var(--kh-border)); box-shadow: var(--kh-shadow-m); transform: translateY(-1px); }
+.knowledge-heatmap-modal .kh-note-main { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 16px; align-items: center; min-width: 0; }
+.knowledge-heatmap-modal .kh-note-score { display: flex; width: 66px; height: 66px; flex: 0 0 auto; flex-direction: column; align-items: center; justify-content: center; border-radius: 50%; background: radial-gradient(circle closest-side, var(--kh-raised) 79%, transparent 81% 100%), conic-gradient(var(--kh-tone) 0deg var(--kh-note-progress), var(--kh-border) var(--kh-note-progress) 360deg); }
+.knowledge-heatmap-modal .kh-note-score strong { font-size: .88rem; font-variant-numeric: tabular-nums; font-weight: 760; line-height: 1; } .knowledge-heatmap-modal .kh-note-score span { margin-top: 3px; color: var(--kh-muted); font-size: .52rem; font-weight: 680; text-transform: uppercase; }
+.knowledge-heatmap-modal .kh-note-copy { min-width: 0; } .knowledge-heatmap-modal .kh-note-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.knowledge-heatmap-modal .kh-open-note { display: flex; min-width: 0; align-items: center; gap: 6px; margin: 0; padding: 0; overflow: hidden; border: 0; background: transparent; color: var(--kh-text); box-shadow: none; font-size: .92rem; font-weight: 720; text-align: left; cursor: pointer; }
+.knowledge-heatmap-modal .kh-note-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .knowledge-heatmap-modal .kh-open-note-icon { color: var(--kh-faint); opacity: 0; transition: 150ms ease; } .knowledge-heatmap-modal .kh-open-note:hover { color: var(--kh-accent); } .knowledge-heatmap-modal .kh-open-note:hover .kh-open-note-icon { opacity: 1; transform: translate(2px, -2px); }
+.knowledge-heatmap-modal .kh-note-status { flex: 0 0 auto; min-height: 24px; padding: 5px 9px; border: 1px solid color-mix(in srgb, var(--kh-tone) 34%, var(--kh-border)); background: color-mix(in srgb, var(--kh-tone) 10%, var(--kh-raised)); color: var(--kh-tone); }
+.knowledge-heatmap-modal .kh-note-meta { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-top: 7px; }
+.knowledge-heatmap-modal .kh-note-meta > span { display: inline-flex; min-width: 0; align-items: center; gap: 5px; color: var(--kh-muted); font-size: .65rem; white-space: nowrap; } .knowledge-heatmap-modal .kh-note-meta .kh-inline-icon { color: var(--kh-tone); } .knowledge-heatmap-modal .kh-note-meta svg { width: 12px; height: 12px; }
+.knowledge-heatmap-modal .kh-note-reason { margin-top: 10px; color: var(--kh-muted); font-size: .77rem; line-height: 1.5; }
+.knowledge-heatmap-modal .kh-action { margin-top: 9px; padding: 8px 10px; border: 1px solid color-mix(in srgb, var(--kh-tone) 18%, var(--kh-border)); border-radius: var(--kh-r-sm); background: color-mix(in srgb, var(--kh-tone) 7%, var(--kh-raised)); font-size: .7rem; }
+.knowledge-heatmap-modal .kh-note-card details { margin-left: 82px; border-top: 1px solid var(--kh-border); font-size: var(--font-ui-small); } .knowledge-heatmap-modal .kh-note-card summary { padding: 10px 0 0; color: var(--kh-muted); cursor: pointer; font-weight: 680; }
+.knowledge-heatmap-modal .kh-factor-list { margin-top: 12px; } .knowledge-heatmap-modal .kh-factor-list li { display: grid; grid-template-columns: minmax(8rem, .35fr) 1fr; gap: 12px; color: var(--kh-muted); } .knowledge-heatmap-modal .kh-factor-list li span:first-child { color: var(--kh-text); font-weight: 680; }
+.knowledge-heatmap-modal .kh-load-more { display: block; min-height: 42px; margin: 16px auto 0; padding: 9px 16px; border: 1px solid var(--kh-border); border-radius: var(--kh-r-md); background: var(--kh-raised); color: var(--kh-text); box-shadow: var(--kh-shadow-s); font-weight: 700; cursor: pointer; }
+.knowledge-heatmap-modal .kh-load-more:hover { border-color: var(--kh-accent-border); background: var(--kh-accent-soft); color: var(--kh-accent); } .knowledge-heatmap-modal .kh-meta { padding-top: 16px; border-top: 1px solid var(--kh-border); font-size: var(--font-ui-smaller); }
+
+/* States and body-attached tooltip */
+.knowledge-heatmap-modal :where(.kh-empty, .kh-error, .kh-loading) { padding: clamp(28px, 5vw, 52px); border: 1px solid var(--kh-border); border-radius: var(--kh-r-xl); background: var(--kh-raised); box-shadow: var(--kh-shadow-s); text-align: center; }
+.knowledge-heatmap-modal :where(.kh-loading, .kh-error) { margin: clamp(24px, 5vw, 48px); } .knowledge-heatmap-modal .kh-error { border-color: var(--background-modifier-error); color: var(--text-error); }
+.knowledge-heatmap-modal :where(.kh-loading, .kh-error) button { min-height: 40px; margin-top: 16px; padding: 8px 15px; border-radius: var(--kh-r-md); }
+.kh-tooltip { display: none; position: fixed; z-index: var(--layer-tooltip, 70); width: 19rem; max-width: calc(100vw - 1rem); padding: 15px; border: 1px solid var(--background-modifier-border); border-radius: 14px; background: var(--background-primary); box-shadow: var(--shadow-l); box-sizing: border-box; color: var(--text-normal); font-size: var(--font-ui-small); line-height: 1.45; pointer-events: none; text-align: left; }
+.kh-tooltip.is-visible { display: flex; flex-direction: column; gap: 8px; } .kh-tooltip.is-measuring { visibility: hidden; } .kh-tooltip-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.kh-tooltip-badge { padding: 3px 8px; border-radius: 999px; color: #fff; font-size: var(--font-ui-smaller); font-weight: 700; } .kh-tooltip-badge--healthy { background: #2e9d74; } .kh-tooltip-badge--stale { background: #a96e12; } .kh-tooltip-badge--forgotten { background: #d95763; }
+.kh-tooltip-path { overflow: hidden; color: var(--text-muted); text-overflow: ellipsis; white-space: nowrap; } .kh-tooltip-facts { display: grid; grid-template-columns: 1fr auto; gap: 3px 12px; } .kh-tooltip-facts span:nth-child(odd) { color: var(--text-muted); } .kh-tooltip-action { color: var(--text-accent); font-weight: 700; }
+.kh-settings-textarea { min-height: 7rem; resize: vertical; }
+
+@media (max-width: 980px) {
+	.knowledge-heatmap-modal .kh-overview-grid { grid-template-columns: 1fr; }
+	.knowledge-heatmap-modal .kh-summary { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
-
-.kh-toolbar {
-	flex-wrap: wrap;
-	box-shadow: var(--kh-shadow);
-	padding: var(--size-4-3);
-	border: 1px solid var(--background-modifier-border);
-	border-radius: var(--kh-radius);
-	background: var(--kh-panel);
+@media (max-width: 700px) {
+	.knowledge-heatmap-modal { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; border-radius: 0; }
+	.knowledge-heatmap-modal .modal-content { max-height: 100dvh; gap: 22px; padding: 18px 16px 38px; }
+	.knowledge-heatmap-modal .modal-close-button { top: 12px; right: 10px; }
+	.knowledge-heatmap-modal .kh-app-header { align-items: flex-start; padding-right: 40px; } .knowledge-heatmap-modal .kh-local-badge { display: none; }
+	.knowledge-heatmap-modal .kh-brand-mark { width: 43px; height: 43px; border-radius: 13px; } .knowledge-heatmap-modal .kh-brand-copy h1 { font-size: 1.18rem; } .knowledge-heatmap-modal .kh-brand-copy p { font-size: .61rem; }
+	.knowledge-heatmap-modal .kh-health-card { min-height: auto; padding: 20px; } .knowledge-heatmap-modal .kh-health-card-body { gap: 16px; } .knowledge-heatmap-modal .kh-health-score-row > strong { font-size: clamp(2.7rem, 16vw, 3.7rem); } .knowledge-heatmap-modal .kh-health-description { font-size: .78rem; } .knowledge-heatmap-modal .kh-health-ring { width: 96px; }
+	.knowledge-heatmap-modal .kh-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.knowledge-heatmap-modal :where(.kh-controls-heading, .kh-section-heading) { align-items: flex-start; flex-direction: column; gap: 8px; } .knowledge-heatmap-modal .kh-controls-heading > p { text-align: left; }
+	.knowledge-heatmap-modal .kh-toolbar { grid-template-columns: 1fr; } .knowledge-heatmap-modal .kh-input-shell :where(input, select) { min-height: 44px; }
+	.knowledge-heatmap-modal .kh-map-header { align-items: stretch; } .knowledge-heatmap-modal .kh-segmented { width: 100%; } .knowledge-heatmap-modal .kh-segmented button { min-height: 44px; flex: 1; padding-inline: 8px; font-size: .72rem; }
+	.knowledge-heatmap-modal .kh-legend { margin-top: -10px; gap: 7px 12px; font-size: .68rem; } .knowledge-heatmap-modal .kh-map { margin-bottom: 24px; padding: 14px; }
+	.knowledge-heatmap-modal .kh-map-group-heading { align-items: flex-start; flex-direction: column; gap: 8px; } .knowledge-heatmap-modal .kh-folder-health { width: 100%; } .knowledge-heatmap-modal .kh-folder-distribution { flex: 1; width: auto; } .knowledge-heatmap-modal .kh-map-cells { grid-template-columns: repeat(auto-fill, minmax(2.1rem, 1fr)); gap: .34rem; } .knowledge-heatmap-modal button.kh-cell, .knowledge-heatmap-modal .kh-map-more { min-width: 2.1rem; height: 2.25rem; }
+	.knowledge-heatmap-modal .kh-note-card { padding: 16px 14px; } .knowledge-heatmap-modal .kh-note-main { gap: 12px; align-items: start; } .knowledge-heatmap-modal .kh-note-score { width: 54px; height: 54px; } .knowledge-heatmap-modal .kh-note-heading { align-items: flex-start; flex-direction: column; gap: 6px; } .knowledge-heatmap-modal .kh-note-card details { margin-left: 66px; } .knowledge-heatmap-modal .kh-factor-list li { grid-template-columns: 1fr; gap: 2px; }
+	.kh-tooltip { width: min(19rem, calc(100vw - 24px)); }
 }
-
-.kh-toolbar label {
-	font-size: var(--font-ui-small);
-	color: var(--text-muted);
-	display: flex;
-	align-items: center;
-	gap: var(--size-4-2);
+@media (max-width: 390px) {
+	.knowledge-heatmap-modal .kh-health-ring, .knowledge-heatmap-modal .kh-note-score { display: none; }
+	.knowledge-heatmap-modal .kh-summary-card { min-height: 112px; padding: 13px; } .knowledge-heatmap-modal .kh-summary-hint { white-space: normal; }
+	.knowledge-heatmap-modal .kh-note-main { grid-template-columns: 1fr; } .knowledge-heatmap-modal .kh-note-card details { margin-left: 0; }
 }
-
-.kh-toolbar input[type="search"] {
-	min-width: min(20rem, 70vw);
-}
-
-.kh-summary {
-	display: grid;
-	grid-template-columns: repeat(5, minmax(0, 1fr));
-	align-items: stretch;
-}
-
-.kh-summary-card {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: flex-start;
-	width: 100%;
-	min-width: 0;
-	min-height: 8rem;
-	height: auto;
-	padding: 18px;
-	border: 1px solid var(--background-modifier-border);
-	border-radius: var(--kh-radius);
-	background: var(--kh-panel);
-	box-shadow: var(--kh-shadow);
-	box-sizing: border-box;
-	color: var(--text-normal);
-	line-height: 1.25;
-	text-align: start;
-	white-space: normal;
-	transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
-}
-
-.kh-summary-card:hover,
-.kh-summary-card:focus-visible,
-.kh-summary-card.is-active {
-	transform: translateY(-2px);
-	border-color: var(--kh-accent);
-	box-shadow: var(--shadow-s);
-}
-
-.kh-summary-card.is-active {
-	background: var(--kh-accent-soft);
-}
-
-.kh-summary-value {
-	display: block;
-	font-size: clamp(26px, 3vw, 34px);
-	font-variant-numeric: tabular-nums;
-	letter-spacing: -0.04em;
-	margin-block-end: 6px;
-	font-weight: var(--font-semibold);
-}
-
-.kh-summary-action {
-	margin-block-start: auto;
-	padding-block-start: var(--size-4-2);
-	color: var(--kh-accent);
-	font-size: var(--font-ui-smaller);
-}
-
-.kh-section-title {
-	font-size: 18px;
-	font-weight: var(--font-semibold);
-	letter-spacing: -0.02em;
-	margin-block: 8px 12px;
-}
-
-.kh-legend {
-	flex-wrap: wrap;
-	font-size: var(--font-ui-small);
-	gap: 8px 18px;
-}
-
-.knowledge-heatmap-modal .kh-legend-item {
-	background: transparent;
-	color: var(--text-muted);
-}
-
-.kh-legend-item::before {
-	display: inline-block;
-	width: 0.75rem;
-	height: 0.75rem;
-	margin-inline-end: var(--size-2-2);
-	border-radius: var(--radius-s);
-	content: "";
-	vertical-align: middle;
-}
-
-.kh-level-healthy::before,
-.kh-level-healthy,
-.kh-level-fresh::before,
-.kh-level-fresh {
-	background: var(--kh-healthy);
-}
-
-.kh-level-stale::before,
-.kh-level-stale,
-.kh-level-aging::before,
-.kh-level-aging {
-	background: var(--kh-stale);
-}
-
-.kh-level-forgotten::before,
-.kh-level-forgotten,
-.kh-level-old::before,
-.kh-level-old,
-.kh-level-orphan::before,
-.kh-level-orphan {
-	background: var(--kh-forgotten);
-}
-
-.kh-level-connected::before,
-.kh-level-connected { background: var(--kh-connected); }
-.kh-level-some-links::before,
-.kh-level-some-links { background: var(--kh-some-links); }
-
-.kh-legend-symbol { color: var(--text-muted); }
-
-.kh-map-header {
-	display: flex;
-	align-items: end;
-	justify-content: space-between;
-	gap: var(--size-4-4);
-}
-
-.kh-map-header .kh-section-title { margin-bottom: 0; }
-
-.kh-segmented {
-	display: flex;
-	padding: 3px;
-	border: 1px solid var(--background-modifier-border);
-	border-radius: var(--kh-radius);
-	background: var(--kh-panel);
-}
-
-.kh-segmented button { min-height: 36px; padding-inline: 14px; border: 0; border-radius: 10px; box-shadow: none; background: transparent; color: var(--text-muted); font-size: var(--font-ui-small); }
-.kh-segmented button.is-active { background: var(--kh-accent); color: white; }
-
-.kh-map {
-	box-shadow: var(--kh-shadow);
-	margin-block-end: 20px;
-	display: flex;
-	flex-direction: column;
-	gap: var(--size-4-3);
-	padding: var(--size-4-3);
-	border: 1px solid var(--background-modifier-border);
-	border-radius: var(--kh-radius);
-	background: var(--kh-panel);
-}
-
-.kh-map-group { display: flex; flex-direction: column; gap: 10px; }
-.kh-map-group + .kh-map-group { border-block-start: 1px solid var(--kh-border); padding-block-start: 14px; }
-.kh-map-group-heading {
-	display: flex;
-	justify-content: space-between;
-	width: 100%;
-	padding: 0;
-	border: 0;
-	box-shadow: none;
-	background: transparent;
-	color: var(--text-muted);
-	text-align: start;
-}
-.kh-map-group-heading:hover { color: var(--kh-accent); }
-.kh-map-cells { display: grid; grid-template-columns: repeat(auto-fill, minmax(2.35rem, 1fr)); gap: 0.35rem; }
-
-button.kh-cell {
-	position: relative;
-	min-width: 2.35rem;
-	height: 2.35rem;
-	padding: 0;
-	border: 1px solid var(--background-modifier-border-hover);
-	border-radius: 8px;
-	box-shadow: inset 0 1px 0 rgb(255 255 255 / 12%);
-	color: #fff;
-	font-variant-numeric: tabular-nums;
-	font-size: var(--font-ui-smaller);
-	font-weight: var(--font-semibold);
-	text-shadow: 0 1px 2px rgb(0 0 0 / 55%);
-	transition: transform 100ms ease, filter 100ms ease;
-}
-
-button.kh-cell:hover,
-button.kh-cell:focus-visible {
-	outline: 2px solid var(--kh-accent);
-	outline-offset: 2px;
-	transform: scale(1.12);
-	filter: brightness(1.08);
-}
-
-.kh-cell-state { position: absolute; inset-block-start: 1px; inset-inline-end: 3px; font-size: 0.6rem; }
-.kh-visually-hidden {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
-}
-.kh-tooltip {
-	display: none;
-	position: fixed;
-	z-index: var(--layer-tooltip, 70);
-	width: 18rem;
-	max-width: calc(100vw - 1rem);
-	padding: var(--size-4-3);
-	border: 1px solid var(--background-modifier-border);
-	border-radius: var(--kh-radius, var(--radius-m));
-	background: var(--background-primary);
-	box-shadow: var(--shadow-l);
-	box-sizing: border-box;
-	color: var(--text-normal);
-	font-weight: normal;
-	pointer-events: none;
-	text-align: start;
-}
-.kh-tooltip.is-visible { display: flex; flex-direction: column; gap: var(--size-4-2); }
-.kh-tooltip.is-measuring { visibility: hidden; }
-.kh-tooltip-header { display: flex; align-items: center; justify-content: space-between; gap: var(--size-4-2); }
-.kh-tooltip-badge {
-	padding: 2px var(--size-4-2);
-	border-radius: 999px;
-	color: white;
-	font-size: var(--font-ui-smaller);
-	font-weight: var(--font-semibold);
-	line-height: 1.4;
-}
-.kh-tooltip-badge--healthy { background: var(--kh-healthy, #2f9e74); }
-.kh-tooltip-badge--stale { background: var(--kh-stale, #d49a24); }
-.kh-tooltip-badge--forgotten { background: var(--kh-forgotten, #d95757); }
-.kh-tooltip-path { overflow: hidden; color: var(--text-muted); text-overflow: ellipsis; white-space: nowrap; }
-.kh-tooltip-facts { display: grid; grid-template-columns: 1fr auto; gap: 3px var(--size-4-3); }
-.kh-tooltip-facts span:nth-child(odd) { color: var(--text-muted); }
-.kh-tooltip-action { color: var(--kh-accent, var(--text-accent)); font-weight: var(--font-semibold); }
-
-.knowledge-heatmap-modal button.mod-cta {
-	background: var(--kh-accent);
-	color: white;
-}
-
-.knowledge-heatmap-modal button.mod-cta:hover {
-	background: var(--kh-accent-hover);
-}
-
-.kh-folder-list,
-.kh-note-list,
-.kh-factor-list {
-	display: flex;
-	flex-direction: column;
-	gap: var(--size-4-2);
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-.kh-folder-row,
-.kh-note-card {
-	justify-content: space-between;
-	padding: var(--size-4-3);
-	border: 1px solid var(--background-modifier-border);
-	border-radius: var(--kh-radius);
-	background: var(--kh-panel);
-}
-
-.kh-folder-name,
-.kh-note-name {
-	font-weight: var(--font-semibold);
-}
-
-.kh-note-card {
-	padding: 18px 20px;
-	box-shadow: var(--kh-shadow);
-	display: flex;
-	flex-direction: column;
-	gap: var(--size-4-2);
-	border-inline-start-width: 0.35rem;
-}
-
-.kh-note-card--healthy {
-	border-inline-start-color: var(--kh-healthy);
-}
-
-.kh-note-card--stale {
-	border-inline-start-color: var(--kh-stale);
-}
-
-.kh-note-card--forgotten {
-	border-inline-start-color: var(--kh-forgotten);
-}
-
-.kh-note-heading {
-	justify-content: space-between;
-	align-items: flex-start;
-}
-
-.kh-open-note {
-	max-width: 75%;
-	padding: 0;
-	border: 0;
-	background: transparent;
-	box-shadow: none;
-	color: var(--text-accent);
-	text-align: start;
-}
-
-.kh-open-note:hover,
-.kh-open-note:focus-visible {
-	color: var(--text-accent-hover);
-	text-decoration: underline;
-}
-
-.kh-score {
-	font-size: var(--font-ui-small);
-	border-radius: 999px;
-	padding: 4px 10px;
-	background: var(--background-secondary);
-	font-variant-numeric: tabular-nums;
-	white-space: nowrap;
-	font-weight: var(--font-semibold);
-}
-
-.kh-action {
-	font-size: var(--font-ui-small);
-	padding: var(--size-4-2) var(--size-4-3);
-	border-radius: var(--radius-s);
-	background: var(--background-secondary);
-}
-
-.kh-factor-list {
-	margin-block-start: var(--size-4-2);
-}
-
-.kh-factor-list li {
-	display: grid;
-	grid-template-columns: minmax(7rem, 0.35fr) 1fr;
-	gap: var(--size-4-3);
-}
-
-.kh-empty,
-.kh-error,
-.kh-loading {
-	padding: var(--size-4-6);
-	border: 1px solid var(--background-modifier-border);
-	border-radius: var(--radius-m);
-	text-align: center;
-}
-
-.kh-error {
-	border-color: var(--background-modifier-error);
-	color: var(--text-error);
-}
-
-.kh-load-more {
-	align-self: center;
-}
-
-.kh-settings-textarea {
-	min-height: 7rem;
-	resize: vertical;
-}
-
-@media (max-width: 600px) {
-	.knowledge-heatmap-modal {
-		width: 100%;
-	}
-
-	.kh-toolbar,
-	.kh-map-header,
-	.kh-note-heading,
-	.kh-folder-row,
-	.kh-factor-list li {
-		align-items: stretch;
-		flex-direction: column;
-		grid-template-columns: 1fr;
-	}
-
-	.kh-toolbar label,
-	.kh-toolbar input[type="search"],
-	.kh-toolbar select,
-	.kh-toolbar button,
-	.kh-open-note {
-		width: 100%;
-		max-width: none;
-	}
-
-	.kh-segmented { width: 100%; }
-	.kh-segmented button { flex: 1; }
-	.kh-map-cells { grid-template-columns: repeat(auto-fill, minmax(2rem, 1fr)); }
-	.kh-tooltip { width: min(18rem, 75vw); }
-}
-
-@media (min-width: 601px) and (max-width: 900px) {
-	.kh-summary {
-		grid-template-columns: repeat(3, minmax(0, 1fr));
-	}
-}
-
-@media (max-width: 600px) {
-	.kh-summary {
-		grid-template-columns: repeat(2, minmax(0, 1fr));
-	}
-}
-
-/* Keep dashboard refinements within the plugin modal. */
-.knowledge-heatmap-modal .modal-title {
-	font-size: clamp(22px, 3vw, 28px);
-	font-weight: var(--font-semibold);
-	letter-spacing: -0.035em;
-}
-
-.knowledge-heatmap-modal .kh-intro {
-	margin: 0;
-	max-width: 78ch;
-	font-size: var(--font-ui-small);
-}
-
-.knowledge-heatmap-modal .kh-note-card p { margin: 0; }
-.knowledge-heatmap-modal .kh-note-path { font-size: var(--font-ui-small); overflow-wrap: anywhere; }
-.knowledge-heatmap-modal .kh-map-group-heading { gap: 12px; height: auto; min-height: 32px; white-space: normal; }
-.knowledge-heatmap-modal .kh-folder-name { overflow-wrap: anywhere; }
-.knowledge-heatmap-modal .kh-map-group-heading .kh-muted { flex-shrink: 0; }
-.knowledge-heatmap-modal .kh-note-card details { font-size: var(--font-ui-small); }
-.knowledge-heatmap-modal .kh-note-card summary { cursor: pointer; color: var(--text-muted); padding-block: 6px; }
-.knowledge-heatmap-modal .kh-meta { margin: 0; padding-block-start: 16px; border-block-start: 1px solid var(--kh-border); font-size: var(--font-ui-smaller); }
-.knowledge-heatmap-modal .kh-toolbar input,
-.knowledge-heatmap-modal .kh-toolbar select,
-.knowledge-heatmap-modal .kh-toolbar button { min-height: 38px; border-radius: 9px; }
-.knowledge-heatmap-modal .kh-toolbar input:focus-visible,
-.knowledge-heatmap-modal .kh-toolbar select:focus-visible,
-.knowledge-heatmap-modal button:focus-visible,
-.knowledge-heatmap-modal summary:focus-visible { outline: 2px solid var(--kh-accent); outline-offset: 3px; }
-
-@media (max-width: 600px) {
-	.knowledge-heatmap-modal { padding: 16px; border-radius: 16px; }
-	.knowledge-heatmap-modal .modal-content { gap: 16px; }
-	.knowledge-heatmap-modal .kh-summary-card { min-height: 7rem; padding: 14px; }
-	.knowledge-heatmap-modal .kh-summary-card:last-child { grid-column: 1 / -1; }
-	.knowledge-heatmap-modal .kh-map-header { align-items: stretch; flex-direction: column; }
-	.knowledge-heatmap-modal .kh-toolbar label { align-items: stretch; flex-direction: column; }
-	.knowledge-heatmap-modal .kh-toolbar input[type="search"] { min-width: 0; }
-	.knowledge-heatmap-modal .kh-toolbar button,
-	.knowledge-heatmap-modal .kh-segmented button,
-	.knowledge-heatmap-modal .kh-open-note,
-	.knowledge-heatmap-modal .kh-load-more { min-height: 44px; }
-	.knowledge-heatmap-modal .kh-segmented button { padding-inline: 8px; font-size: 12px; }
-	.knowledge-heatmap-modal .kh-map-group-heading { align-items: flex-start; flex-direction: column; gap: 2px; }
-	.knowledge-heatmap-modal .kh-note-card { padding: 16px; }
-	.knowledge-heatmap-modal .kh-score { align-self: flex-start; }
-}
-
 @media (prefers-reduced-motion: reduce) {
-	.knowledge-heatmap-modal .kh-summary-card,
-	.knowledge-heatmap-modal button.kh-cell { transition: none; }
-	.knowledge-heatmap-modal .kh-summary-card:hover,
-	.knowledge-heatmap-modal .kh-summary-card:focus-visible,
-	.knowledge-heatmap-modal .kh-summary-card.is-active,
-	.knowledge-heatmap-modal button.kh-cell:hover,
-	.knowledge-heatmap-modal button.kh-cell:focus-visible { transform: none; }
+	.knowledge-heatmap-modal :where(.kh-health-card, .kh-summary-card, .kh-icon-button, .kh-note-card, button.kh-cell, .kh-summary-card::after, .kh-open-note-icon) { transition: none; }
+	.knowledge-heatmap-modal :where(.kh-health-card, .kh-summary-card, .kh-icon-button, .kh-note-card, button.kh-cell):hover { transform: none; }
 }
-
-.knowledge-heatmap-modal button.kh-level-stale,
-.knowledge-heatmap-modal button.kh-level-aging { color: #201600; text-shadow: none; }
-.knowledge-heatmap-modal .kh-note-card--healthy .kh-score { color: var(--kh-healthy); }
-.knowledge-heatmap-modal .kh-note-card--stale .kh-score { color: var(--text-normal); }
-.knowledge-heatmap-modal .kh-note-card--forgotten .kh-score { color: var(--kh-forgotten); }

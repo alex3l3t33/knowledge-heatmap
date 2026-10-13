@@ -1,4 +1,4 @@
-import { App, Component, Modal, TFile } from "obsidian";
+import { App, Component, Modal, setIcon, TFile } from "obsidian";
 import type {
 	AnalysisSnapshot,
 	HealthStatus,
@@ -13,6 +13,7 @@ import { calculateTooltipPosition } from "./tooltip-position";
 
 const PAGE_SIZE = 100;
 const MAX_MAP_CELLS = 500;
+const MAX_MAP_CELLS_PER_FOLDER = 16;
 const MAX_FOLDER_ROWS = 20;
 const TOOLTIP_GAP = 8;
 const TOOLTIP_MARGIN = 8;
@@ -36,6 +37,13 @@ function formatDuration(milliseconds: number): string {
 
 function formatCount(value: number, singular: string): string {
 	return `${value.toLocaleString()} ${singular}${value === 1 ? "" : "s"}`;
+}
+
+function appendIcon(parent: HTMLElement, icon: string, className: string): HTMLSpanElement {
+	const iconEl = parent.createSpan({ cls: className });
+	setIcon(iconEl, icon);
+	iconEl.setAttr("aria-hidden", "true");
+	return iconEl;
 }
 
 export class KnowledgeHeatmapModal extends Modal {
@@ -64,7 +72,7 @@ export class KnowledgeHeatmapModal extends Modal {
 	override onOpen(): void {
 		this.closed = false;
 		this.modalEl.addClass("knowledge-heatmap-modal");
-		this.titleEl.setText("Note health dashboard");
+		this.titleEl.setText("Knowledge heatmap");
 		void this.refresh(false);
 	}
 
@@ -159,10 +167,7 @@ export class KnowledgeHeatmapModal extends Modal {
 
 	private renderSnapshot(snapshot: AnalysisSnapshot): void {
 		const scope = this.resetRenderScope();
-		this.contentEl.createEl("p", {
-			cls: "kh-intro",
-			text: "A local, read-only view of recency (60 points), connections (25), and substance (15). Scores of 70+ are healthy, 40–69 are stale, and below 40 are forgotten.",
-		});
+		this.renderHeader(scope, snapshot);
 		this.renderSummary(scope, snapshot);
 
 		if (snapshot.summary.total === 0) {
@@ -176,30 +181,84 @@ export class KnowledgeHeatmapModal extends Modal {
 		this.renderRunMetadata(snapshot);
 	}
 
-	private renderSummary(scope: Component, snapshot: AnalysisSnapshot): void {
-		const summary = this.contentEl.createDiv({ cls: "kh-summary" });
-		this.createSummaryCard(scope, summary, "Average score", String(snapshot.summary.averageScore), "all", snapshot);
-		this.createSummaryCard(scope, summary, "Healthy", snapshot.summary.healthy.toLocaleString(), "healthy", snapshot);
-		this.createSummaryCard(scope, summary, "Stale", snapshot.summary.stale.toLocaleString(), "stale", snapshot);
-		this.createSummaryCard(scope,
-			summary,
-			"Forgotten",
-			snapshot.summary.forgotten.toLocaleString(),
-			"forgotten",
-			snapshot,
-		);
-		this.createSummaryCard(scope, summary, "Included", snapshot.summary.total.toLocaleString(), "all", snapshot);
+	private renderHeader(scope: Component, snapshot: AnalysisSnapshot): void {
+		const header = this.contentEl.createEl("header", { cls: "kh-app-header" });
+		const brand = header.createDiv({ cls: "kh-brand" });
+		const mark = brand.createDiv({ cls: "kh-brand-mark" });
+		appendIcon(mark, "activity", "kh-brand-icon");
+		const copy = brand.createDiv({ cls: "kh-brand-copy" });
+		copy.createEl("p", { text: "Local note intelligence" });
+		copy.createEl("h1", { text: "Knowledge heatmap" });
+		const actions = header.createDiv({ cls: "kh-header-actions" });
+		const privacy = actions.createSpan({ cls: "kh-local-badge" });
+		appendIcon(privacy, "shield-check", "kh-inline-icon");
+		privacy.createSpan({ text: "Stays in your vault" });
+		const refreshButton = actions.createEl("button", {
+			cls: "kh-icon-button",
+			attr: { type: "button", "aria-label": "Recalculate all note health scores" },
+		});
+		appendIcon(refreshButton, "refresh-cw", "kh-inline-icon");
+		scope.registerDomEvent(refreshButton, "click", () => void this.refresh(true));
+		refreshButton.setAttr("title", `Refresh analysis · ${formatCount(snapshot.summary.total, "note")}`);
 	}
 
-	private createSummaryCard(scope: Component, parent: HTMLElement, label: string, value: string, filter: StatusFilter, snapshot: AnalysisSnapshot): void {
+	private renderSummary(scope: Component, snapshot: AnalysisSnapshot): void {
+		const overview = this.contentEl.createDiv({ cls: "kh-overview-grid" });
+		const hero = overview.createEl("button", {
+			cls: `kh-health-card${this.statusFilter === "all" ? " is-active" : ""}`,
+			attr: { type: "button", "aria-label": "Show all included notes" },
+		});
+		hero.style.setProperty("--kh-score-progress", `${snapshot.summary.averageScore * 3.6}deg`);
+		const heroGlow = hero.createDiv({ cls: "kh-health-card-glow" });
+		heroGlow.setAttr("aria-hidden", "true");
+		const heroBody = hero.createDiv({ cls: "kh-health-card-body" });
+		const heroCopy = heroBody.createDiv({ cls: "kh-health-card-copy" });
+		heroCopy.createEl("p", { cls: "kh-eyebrow", text: "Overall knowledge health" });
+		const scoreRow = heroCopy.createDiv({ cls: "kh-health-score-row" });
+		scoreRow.createEl("strong", { text: `${snapshot.summary.averageScore}%` });
+		const scoreLabel = snapshot.summary.averageScore >= 70 ? "Healthy" : snapshot.summary.averageScore >= 40 ? "Needs attention" : "At risk";
+		scoreRow.createSpan({ cls: "kh-health-pill", text: scoreLabel });
+		heroCopy.createEl("p", {
+			cls: "kh-health-description",
+			text: "A weighted view of recency, connections, and substance across every included note.",
+		});
+		const ring = heroBody.createDiv({ cls: "kh-health-ring" });
+		const ringInner = ring.createDiv({ cls: "kh-health-ring-inner" });
+		appendIcon(ringInner, "activity", "kh-health-ring-icon");
+		ringInner.createSpan({ text: "Vault score" });
+		const breakdown = hero.createDiv({ cls: "kh-health-breakdown", attr: { "aria-hidden": "true" } });
+		for (const [count, tone] of [[snapshot.summary.healthy, "healthy"], [snapshot.summary.stale, "stale"], [snapshot.summary.forgotten, "forgotten"]] as const) {
+			if (count > 0) {
+				const segment = breakdown.createSpan({ cls: `kh-breakdown-${tone}` });
+				segment.style.flexGrow = String(count);
+			}
+		}
+		scope.registerDomEvent(hero, "click", () => {
+			this.statusFilter = "all";
+			this.folderFilter = undefined;
+			this.visibleLimit = PAGE_SIZE;
+			this.renderSnapshot(snapshot);
+		});
+
+		const summary = overview.createDiv({ cls: "kh-summary" });
+		this.createSummaryCard(scope, summary, "Healthy", snapshot.summary.healthy.toLocaleString(), "healthy", "check-circle-2", "Ready and maintained", snapshot);
+		this.createSummaryCard(scope, summary, "Stale", snapshot.summary.stale.toLocaleString(), "stale", "clock-3", "Worth revisiting", snapshot);
+		this.createSummaryCard(scope, summary, "Forgotten", snapshot.summary.forgotten.toLocaleString(), "forgotten", "archive", "Needs recovery", snapshot);
+		this.createSummaryCard(scope, summary, "Included", snapshot.summary.total.toLocaleString(), "all", "files", "In this analysis", snapshot);
+	}
+
+	private createSummaryCard(scope: Component, parent: HTMLElement, label: string, value: string, filter: StatusFilter, icon: string, hint: string, snapshot: AnalysisSnapshot): void {
 		const card = parent.createEl("button", {
-			cls: `kh-summary-card${this.statusFilter === filter ? " is-active" : ""}`,
+			cls: `kh-summary-card kh-summary-card--${filter}${this.statusFilter === filter ? " is-active" : ""}`,
 		});
 		card.type = "button";
 		card.setAttr("aria-label", `Show ${label.toLocaleLowerCase()} notes`);
+		const top = card.createDiv({ cls: "kh-summary-card-top" });
+		appendIcon(top, icon, "kh-summary-icon");
+		appendIcon(top, "arrow-up-right", "kh-summary-arrow");
 		card.createSpan({ cls: "kh-summary-value", text: value });
-		card.createSpan({ text: label });
-		card.createSpan({ cls: "kh-summary-action", text: filter === "all" ? "View all" : "Filter notes" });
+		card.createSpan({ cls: "kh-summary-label", text: label });
+		card.createSpan({ cls: "kh-summary-hint", text: hint });
 		scope.registerDomEvent(card, "click", () => {
 			this.statusFilter = filter;
 			this.folderFilter = undefined;
@@ -227,17 +286,29 @@ export class KnowledgeHeatmapModal extends Modal {
 	}
 
 	private renderToolbar(scope: Component, snapshot: AnalysisSnapshot): void {
-		const toolbar = this.contentEl.createDiv({ cls: "kh-toolbar" });
-		const searchLabel = toolbar.createEl("label");
-		searchLabel.createSpan({ text: "Find note" });
-		const searchInput = searchLabel.createEl("input", { type: "search" });
+		const controls = this.contentEl.createEl("section", { cls: "kh-controls-card" });
+		const heading = controls.createDiv({ cls: "kh-controls-heading" });
+		const headingCopy = heading.createDiv();
+		headingCopy.createEl("p", { cls: "kh-eyebrow", text: "Explore your vault" });
+		headingCopy.createEl("h2", { text: "Find the notes that need attention" });
+		heading.createEl("p", {
+			text: "Search by title or path, then narrow the dashboard by health category.",
+		});
+		const toolbar = controls.createDiv({ cls: "kh-toolbar" });
+		const searchLabel = toolbar.createEl("label", { cls: "kh-field kh-field--search" });
+		searchLabel.createSpan({ cls: "kh-field-label", text: "Find note" });
+		const searchControl = searchLabel.createDiv({ cls: "kh-input-shell" });
+		appendIcon(searchControl, "search", "kh-field-icon");
+		const searchInput = searchControl.createEl("input", { type: "search" });
 		searchInput.value = this.searchQuery;
 		searchInput.placeholder = "Name, folder, or path";
 		searchInput.setAttr("aria-label", "Find note by name, folder, or path");
 
-		const statusLabelEl = toolbar.createEl("label");
-		statusLabelEl.createSpan({ text: "Category" });
-		const statusSelect = statusLabelEl.createEl("select");
+		const statusLabelEl = toolbar.createEl("label", { cls: "kh-field" });
+		statusLabelEl.createSpan({ cls: "kh-field-label", text: "Category" });
+		const selectShell = statusLabelEl.createDiv({ cls: "kh-input-shell" });
+		appendIcon(selectShell, "list-filter", "kh-field-icon");
+		const statusSelect = selectShell.createEl("select");
 		for (const [value, label] of [
 			["all", "All categories"],
 			["healthy", "Healthy"],
@@ -248,11 +319,6 @@ export class KnowledgeHeatmapModal extends Modal {
 		}
 		statusSelect.value = this.statusFilter;
 		statusSelect.setAttr("aria-label", "Filter by health category");
-
-		const refreshButton = toolbar.createEl("button", { text: "Refresh" });
-		refreshButton.type = "button";
-		refreshButton.addClass("mod-cta");
-		refreshButton.setAttr("aria-label", "Recalculate all note health scores");
 
 		scope.registerDomEvent(searchInput, "input", () => {
 			this.searchQuery = searchInput.value;
@@ -265,7 +331,6 @@ export class KnowledgeHeatmapModal extends Modal {
 			this.visibleLimit = PAGE_SIZE;
 			this.renderNotes(snapshot);
 		});
-		scope.registerDomEvent(refreshButton, "click", () => void this.refresh(true));
 	}
 
 	private renderLegend(): void {
@@ -284,9 +349,10 @@ export class KnowledgeHeatmapModal extends Modal {
 	}
 
 	private renderMapControls(scope: Component, snapshot: AnalysisSnapshot): void {
-		const header = this.contentEl.createDiv({ cls: "kh-map-header" });
+		const header = this.contentEl.createDiv({ cls: "kh-section-heading kh-map-header" });
 		const title = header.createDiv();
-		title.createEl("h3", { cls: "kh-section-title", text: "Knowledge map" });
+		title.createEl("p", { cls: "kh-eyebrow", text: "Visual overview" });
+		title.createEl("h2", { cls: "kh-section-title", text: "Knowledge map" });
 		title.createSpan({ cls: "kh-muted", text: "Weakest folders appear first. Select a cell to open its note." });
 		const modes = header.createDiv({ cls: "kh-segmented", attr: { role: "group", "aria-label": "Knowledge map view" } });
 		for (const [mode, label] of [["health", "Health"], ["freshness", "Freshness"], ["connections", "Connections"]] as const) {
@@ -316,9 +382,15 @@ export class KnowledgeHeatmapModal extends Modal {
 		const section = this.contentEl.createDiv();
 		section.dataset["khNotes"] = "true";
 		const notes = this.filteredNotes(snapshot.notes);
-		section.createEl("h3", {
-			cls: "kh-section-title",
-			text: `Notes (${notes.length.toLocaleString()})`,
+		const heading = section.createDiv({ cls: "kh-section-heading kh-notes-heading" });
+		const headingCopy = heading.createDiv();
+		headingCopy.createEl("p", { cls: "kh-eyebrow", text: this.folderFilter ? "Selected folder" : "Detailed review" });
+		const titleRow = headingCopy.createDiv({ cls: "kh-title-row" });
+		titleRow.createEl("h2", { cls: "kh-section-title", text: this.folderFilter ?? "Notes" });
+		titleRow.createSpan({ cls: "kh-count-badge", text: notes.length.toLocaleString() });
+		headingCopy.createEl("p", {
+			cls: "kh-muted",
+			text: "Open a note directly or expand its score to see each contributing signal.",
 		});
 
 		if (notes.length === 0) {
@@ -357,20 +429,45 @@ export class KnowledgeHeatmapModal extends Modal {
 			groups.set(note.metrics.folder, group);
 		}
 		const orderedFolders = snapshot.folders.filter((folder) => groups.has(folder.path)).slice(0, MAX_FOLDER_ROWS);
-		const map = section.createDiv({ cls: "kh-map" });
+		const map = section.createDiv({ cls: "kh-map kh-surface" });
 		for (const folder of orderedFolders) {
 			const group = map.createDiv({ cls: "kh-map-group" });
 			const heading = group.createEl("button", { cls: "kh-map-group-heading" });
 			heading.type = "button";
-			heading.createSpan({ cls: "kh-folder-name", text: folder.path });
-			heading.createSpan({ text: `${folder.averageScore}% · ${formatCount(folder.noteCount, "note")}` });
+			heading.setAttr("aria-label", `Filter to ${folder.path}, ${folder.averageScore}% average health, ${formatCount(folder.noteCount, "note")}`);
+			const folderCopy = heading.createSpan({ cls: "kh-folder-copy" });
+			folderCopy.createSpan({ cls: "kh-folder-name", text: folder.path });
+			folderCopy.createSpan({ cls: "kh-folder-count", text: formatCount(folder.noteCount, "note") });
+			const folderHealth = heading.createSpan({ cls: "kh-folder-health" });
+			const distribution = folderHealth.createSpan({ cls: "kh-folder-distribution", attr: { "aria-hidden": "true" } });
+			for (const [count, tone] of [[folder.healthyCount, "healthy"], [folder.staleCount, "stale"], [folder.forgottenCount, "forgotten"]] as const) {
+				if (count > 0) {
+					const segment = distribution.createSpan({ cls: `kh-folder-${tone}` });
+					segment.style.flexGrow = String(count);
+				}
+			}
+			folderHealth.createSpan({ cls: "kh-folder-average", text: `${folder.averageScore}% avg` });
 			scope.registerDomEvent(heading, "click", () => {
 				this.folderFilter = this.folderFilter === folder.path ? undefined : folder.path;
 				this.visibleLimit = PAGE_SIZE;
 				this.renderNotes(snapshot);
 			});
 			const cells = group.createDiv({ cls: "kh-map-cells", attr: { role: "list" } });
-			for (const note of groups.get(folder.path) ?? []) this.renderMapCell(scope, cells, note);
+			const folderNotes = groups.get(folder.path) ?? [];
+			for (const note of folderNotes.slice(0, MAX_MAP_CELLS_PER_FOLDER)) this.renderMapCell(scope, cells, note);
+			const hiddenCount = Math.max(0, folder.noteCount - Math.min(folder.noteCount, MAX_MAP_CELLS_PER_FOLDER));
+			if (hiddenCount > 0) {
+				const more = cells.createEl("button", {
+					cls: "kh-map-more",
+					text: `+${hiddenCount.toLocaleString()}`,
+					attr: { type: "button", "aria-label": `Show all notes in ${folder.path}` },
+				});
+				scope.registerDomEvent(more, "click", () => {
+					this.folderFilter = folder.path;
+					this.visibleLimit = PAGE_SIZE;
+					this.renderNotes(snapshot);
+				});
+			}
 		}
 	}
 
@@ -516,21 +613,28 @@ export class KnowledgeHeatmapModal extends Modal {
 		const item = list.createEl("li", {
 			cls: `kh-note-card kh-note-card--${note.result.status}`,
 		});
-		const heading = item.createDiv({ cls: "kh-note-heading" });
+		item.style.setProperty("--kh-note-progress", `${note.result.score * 3.6}deg`);
+		const main = item.createDiv({ cls: "kh-note-main" });
+		const score = main.createDiv({ cls: "kh-note-score" });
+		score.createEl("strong", { text: `${note.result.score}%` });
+		score.createSpan({ text: "health" });
+		const copy = main.createDiv({ cls: "kh-note-copy" });
+		const heading = copy.createDiv({ cls: "kh-note-heading" });
 		const openButton = heading.createEl("button", { cls: "kh-open-note" });
 		openButton.type = "button";
 		openButton.createSpan({ cls: "kh-note-name", text: note.metrics.name });
-		openButton.createEl("br");
-		openButton.createSpan({ cls: "kh-note-path", text: note.metrics.path });
 		openButton.setAttr("aria-label", `Open ${note.metrics.path}`);
-		heading.createSpan({
-			cls: "kh-score",
-			text: `${note.result.score} · ${statusLabel(note.result.status)}`,
-		});
+		appendIcon(openButton, "arrow-up-right", "kh-open-note-icon");
+		heading.createSpan({ cls: "kh-note-status", text: statusLabel(note.result.status) });
 		scope.registerDomEvent(openButton, "click", () => void this.openNote(note.metrics.path));
-
-		item.createEl("p", { text: note.result.reason });
-		item.createEl("p", {
+		const meta = copy.createDiv({ cls: "kh-note-meta" });
+		for (const [icon, text] of [["folder", note.metrics.folder], ["calendar-clock", `${note.result.ageDays} days`], ["link-2", `${note.metrics.backlinks + note.metrics.outlinks} links`], ["file-text", `${note.metrics.wordCount.toLocaleString()} words`]] as const) {
+			const metaItem = meta.createSpan();
+			appendIcon(metaItem, icon, "kh-inline-icon");
+			metaItem.createSpan({ text });
+		}
+		copy.createEl("p", { cls: "kh-note-reason", text: note.result.reason });
+		copy.createEl("p", {
 			cls: "kh-action",
 			text: `Suggested action: ${note.result.suggestedAction}`,
 		});
