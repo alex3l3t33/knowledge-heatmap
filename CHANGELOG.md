@@ -2,6 +2,15 @@
 
 All notable changes to Knowledge Heatmap are documented here.
 
+## 1.0.5 - 2026-10-13
+
+- Rebuilt the dashboard hierarchy and visual system to match the presentation quality of RecallMap while retaining Knowledge Heatmap's identity.
+- Added a vault-health hero, actionable category summaries, clearer search and filtering controls, and richer note review cards.
+- Replaced repetitive folder score walls with prioritized 16-note previews, folder health distributions, average scores, and explicit drill-in controls.
+- Improved desktop and narrow-screen layouts, touch targets, keyboard focus, reduced-motion behavior, and Obsidian theme integration.
+- Preserved scoring, local vault access, settings, caching, and the existing release workflow.
+- Verified the production build in Obsidian 1.14.4 and passed strict linting, 27 tests, type checking, release asset verification, and the 5,012-note benchmark.
+
 ## 1.0.4 - 2026-10-12
 
 - Refined dashboard typography, summary cards, panels, note details, and map controls.
