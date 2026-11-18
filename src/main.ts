@@ -1,6 +1,7 @@
 import { Plugin, TAbstractFile, TFile } from "obsidian";
 import { sanitizeSettings } from "./core/settings";
-import type { KnowledgeHeatmapSettings } from "./core/types";
+import { createHistoryPoint, sanitizeHistory, updateHistory } from "./core/history";
+import type { AnalysisSnapshot, HealthHistoryPoint, KnowledgeHeatmapSettings } from "./core/types";
 import { KnowledgeDataService } from "./plugin/data-service";
 import { KnowledgeHeatmapModal } from "./plugin/dashboard-modal";
 import {
@@ -19,12 +20,19 @@ export default class KnowledgeHeatmapPlugin
 	pluginSettings!: KnowledgeHeatmapSettings;
 
 	private dataService: KnowledgeDataService | undefined;
+	private healthHistory: HealthHistoryPoint[] = [];
 	private readonly dashboards = new Set<KnowledgeHeatmapModal>();
 	private refreshTimer: number | undefined;
 	private unloading = false;
 
 	override async onload(): Promise<void> {
-		this.pluginSettings = sanitizeSettings(await this.loadData());
+		const storedData: unknown = await this.loadData();
+		this.pluginSettings = sanitizeSettings(storedData);
+		this.healthHistory = sanitizeHistory(
+			typeof storedData === "object" && storedData !== null
+				? (storedData as Record<string, unknown>)["healthHistory"]
+				: undefined,
+		);
 		this.dataService = new KnowledgeDataService(this.app);
 
 		this.addRibbonIcon("activity", "Open knowledge health dashboard", () => {
@@ -60,7 +68,7 @@ export default class KnowledgeHeatmapPlugin
 
 	async updateSettings(settings: KnowledgeHeatmapSettings): Promise<void> {
 		this.pluginSettings = sanitizeSettings(settings);
-		await this.saveData(this.pluginSettings);
+		await this.persistData();
 		this.dataService?.invalidateSettings();
 		this.scheduleDashboardRefresh(true);
 	}
@@ -116,10 +124,26 @@ export default class KnowledgeHeatmapPlugin
 			this.app,
 			this.dataService,
 			() => this.pluginSettings,
+			() => this.healthHistory,
+			(snapshot) => void this.recordHealthHistory(snapshot).catch(() => undefined),
 			() => this.dashboards.delete(dashboard),
 		);
 		this.dashboards.add(dashboard);
 		dashboard.open();
+	}
+
+	private async recordHealthHistory(snapshot: AnalysisSnapshot): Promise<void> {
+		const nextHistory = updateHistory(this.healthHistory, createHistoryPoint(snapshot));
+		if (JSON.stringify(nextHistory) === JSON.stringify(this.healthHistory)) return;
+		this.healthHistory = nextHistory;
+		await this.persistData();
+	}
+
+	private async persistData(): Promise<void> {
+		await this.saveData({
+			...this.pluginSettings,
+			healthHistory: this.healthHistory,
+		});
 	}
 
 	private scheduleDashboardRefresh(enabled: boolean): void {

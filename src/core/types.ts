@@ -82,6 +82,18 @@ export interface AnalysisSnapshot {
 	readErrorCount: number;
 }
 
+export interface HealthHistoryPoint {
+	date: string;
+	averageScore: number;
+	healthy: number;
+	stale: number;
+	forgotten: number;
+	total: number;
+	freshness: number;
+	connections: number;
+	substance: number;
+}
+
 export interface AnalysisProgress {
 	processed: number;
 	total: number;

@@ -1,6 +1,7 @@
 import { App, Component, Modal, setIcon, TFile } from "obsidian";
 import type {
 	AnalysisSnapshot,
+	HealthHistoryPoint,
 	HealthStatus,
 	KnowledgeHeatmapSettings,
 	NoteHealth,
@@ -82,6 +83,8 @@ export class KnowledgeHeatmapModal extends Modal {
 		app: App,
 		private readonly dataService: KnowledgeDataService,
 		private readonly getSettings: () => KnowledgeHeatmapSettings,
+		private readonly getHistory: () => readonly HealthHistoryPoint[],
+		private readonly recordSnapshot: (snapshot: AnalysisSnapshot) => void,
 		private readonly onClosed: () => void,
 	) {
 		super(app);
@@ -139,6 +142,7 @@ export class KnowledgeHeatmapModal extends Modal {
 				return;
 			}
 
+			this.recordSnapshot(snapshot);
 			this.renderSnapshot(snapshot);
 		} catch (error) {
 			if (
@@ -187,6 +191,7 @@ export class KnowledgeHeatmapModal extends Modal {
 		const scope = this.resetRenderScope();
 		this.renderHeader(scope, snapshot);
 		this.renderSummary(scope, snapshot);
+		this.renderHistory(snapshot);
 
 		if (snapshot.summary.total === 0) {
 			this.renderEmptyState(snapshot);
@@ -304,6 +309,55 @@ export class KnowledgeHeatmapModal extends Modal {
 			this.visibleLimit = PAGE_SIZE;
 			this.renderSnapshot(snapshot);
 		});
+	}
+
+	private renderHistory(snapshot: AnalysisSnapshot): void {
+		const points = this.getHistory().slice(-30);
+		const current = points.at(-1);
+		const first = points[0];
+		const delta = current && first ? current.averageScore - first.averageScore : 0;
+		const card = this.contentEl.createEl("section", { cls: "kh-history-card" });
+		const heading = card.createDiv({ cls: "kh-history-heading" });
+		const headingCopy = heading.createDiv();
+		headingCopy.createEl("p", { cls: "kh-eyebrow", text: "Health history" });
+		headingCopy.createEl("h2", { text: "Vault health over time" });
+		const trend = heading.createDiv({ cls: `kh-history-trend${delta < 0 ? " is-negative" : ""}` });
+		trend.createEl("strong", { text: `${snapshot.summary.averageScore}/100` });
+		trend.createSpan({
+			text: points.length < 2 ? "History starts today" : `${delta >= 0 ? "+" : ""}${delta} points over ${points.length} days`,
+		});
+		const chart = card.createDiv({ cls: "kh-history-chart" });
+		const svg = chart.createSvg("svg", {
+			attr: {
+				viewBox: "0 0 600 120",
+				preserveAspectRatio: "none",
+				role: "img",
+				"aria-label": points.length < 2
+					? `Vault health is ${snapshot.summary.averageScore} out of 100. History starts today.`
+					: `Vault health changed from ${first?.averageScore ?? 0} to ${current?.averageScore ?? 0} over ${points.length} days.`,
+			},
+		});
+		for (const score of [25, 50, 75]) {
+			const y = 110 - score;
+			svg.createSvg("line", { attr: { x1: "0", y1: String(y), x2: "600", y2: String(y), class: "kh-history-grid-line" } });
+		}
+		const coordinates = points.map((point, index) => {
+			const x = points.length === 1 ? 300 : (index / (points.length - 1)) * 600;
+			return `${x},${110 - point.averageScore}`;
+		});
+		if (coordinates.length > 1) {
+			svg.createSvg("polyline", { attr: { points: coordinates.join(" "), class: "kh-history-line" } });
+		}
+		for (const coordinate of coordinates) {
+			const [cx = "0", cy = "0"] = coordinate.split(",");
+			svg.createSvg("circle", { attr: { cx, cy, r: "4", class: "kh-history-point" } });
+		}
+		const dates = card.createDiv({ cls: "kh-history-dates" });
+		const formatDate = (date: string | undefined): string => date
+			? new Date(`${date}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" })
+			: "Today";
+		dates.createSpan({ text: formatDate(first?.date) });
+		dates.createSpan({ text: formatDate(current?.date) });
 	}
 
 	private renderEmptyState(snapshot: AnalysisSnapshot): void {
@@ -464,8 +518,8 @@ export class KnowledgeHeatmapModal extends Modal {
 	private renderMapControls(scope: Component, snapshot: AnalysisSnapshot): void {
 		const header = this.contentEl.createDiv({ cls: "kh-section-heading kh-map-header" });
 		const title = header.createDiv();
-		title.createEl("p", { cls: "kh-eyebrow", text: "Visual overview" });
-		title.createEl("h2", { cls: "kh-section-title", text: "Knowledge map" });
+		title.createEl("p", { cls: "kh-eyebrow", text: "Knowledge map" });
+		title.createEl("h2", { cls: "kh-section-title", text: "Where attention is needed" });
 		title.createSpan({ cls: "kh-muted", text: "Weakest folders appear first. Select a cell to open its note." });
 		const modes = header.createDiv({ cls: "kh-segmented", attr: { role: "group", "aria-label": "Knowledge map view" } });
 		for (const [mode, label] of [["health", "Health"], ["freshness", "Freshness"], ["connections", "Connections"]] as const) {
@@ -652,7 +706,7 @@ export class KnowledgeHeatmapModal extends Modal {
 		});
 		scope.registerDomEvent(cell, "click", () => {
 			this.hideMapTooltip(tooltip);
-			void this.openNote(note.metrics.path);
+			this.showNoteDrawer(scope, note, cell);
 		});
 		scope.register(() => {
 			this.hideMapTooltip(tooltip);
@@ -737,8 +791,15 @@ export class KnowledgeHeatmapModal extends Modal {
 		openButton.createSpan({ cls: "kh-note-name", text: note.metrics.name });
 		openButton.setAttr("aria-label", `Open ${note.metrics.path}`);
 		appendIcon(openButton, "arrow-up-right", "kh-open-note-icon");
-		heading.createSpan({ cls: "kh-note-status", text: statusLabel(note.result.status) });
+		const headingActions = heading.createSpan({ cls: "kh-note-heading-actions" });
+		headingActions.createSpan({ cls: "kh-note-status", text: statusLabel(note.result.status) });
+		const inspectButton = headingActions.createEl("button", {
+			cls: "kh-inspect-note",
+			attr: { type: "button", "aria-label": `Inspect ${note.metrics.name} without leaving the dashboard` },
+		});
+		appendIcon(inspectButton, "panel-right-open", "kh-inline-icon");
 		scope.registerDomEvent(openButton, "click", () => void this.openNote(note.metrics.path));
+		scope.registerDomEvent(inspectButton, "click", () => this.showNoteDrawer(scope, note, inspectButton));
 		const meta = copy.createDiv({ cls: "kh-note-meta" });
 		for (const [icon, text] of [["folder", note.metrics.folder], ["calendar-clock", `${note.result.ageDays} days`], ["link-2", `${note.metrics.backlinks + note.metrics.outlinks} links`], ["file-text", `${note.metrics.wordCount.toLocaleString()} words`]] as const) {
 			const metaItem = meta.createSpan();
@@ -767,6 +828,78 @@ export class KnowledgeHeatmapModal extends Modal {
 			});
 			factorItem.createSpan({ text: factor.explanation });
 		}
+	}
+
+	private showNoteDrawer(scope: Component, note: NoteHealth, returnFocus: HTMLElement): void {
+		this.modalEl.querySelector("[data-kh-drawer-shell]")?.remove();
+		const shell = this.modalEl.createDiv({ cls: "kh-drawer-shell" });
+		shell.dataset["khDrawerShell"] = "true";
+		const backdrop = shell.createEl("button", {
+			cls: "kh-drawer-backdrop",
+			attr: { type: "button", "aria-label": "Close note details" },
+		});
+		const drawer = shell.createEl("aside", {
+			cls: `kh-note-drawer kh-note-drawer--${note.result.status}`,
+			attr: { role: "dialog", "aria-modal": "false" },
+		});
+		const titleId = `kh-drawer-title-${this.tooltipSequence + 1}`;
+		drawer.setAttr("aria-labelledby", titleId);
+		const header = drawer.createDiv({ cls: "kh-drawer-header" });
+		const headerCopy = header.createDiv();
+		headerCopy.createEl("p", { cls: "kh-eyebrow", text: "Note health" });
+		const title = headerCopy.createEl("h2", { text: note.metrics.name });
+		title.id = titleId;
+		const closeButton = header.createEl("button", {
+			cls: "kh-drawer-close",
+			attr: { type: "button", "aria-label": "Close note details" },
+		});
+		appendIcon(closeButton, "x", "kh-inline-icon");
+		const score = drawer.createDiv({ cls: "kh-drawer-score" });
+		const scoreValue = score.createDiv();
+		scoreValue.createEl("strong", { text: String(note.result.score) });
+		scoreValue.createSpan({ text: "/100" });
+		const scoreCopy = score.createDiv();
+		scoreCopy.createSpan({ cls: "kh-note-status", text: statusLabel(note.result.status) });
+		scoreCopy.createEl("p", { text: note.result.reason });
+		const facts = drawer.createDiv({ cls: "kh-drawer-facts" });
+		for (const [label, value] of [
+			["Last edited", `${note.result.ageDays} days ago`],
+			["Connections", `${note.metrics.backlinks + note.metrics.outlinks} links`],
+			["Substance", `${note.metrics.wordCount.toLocaleString()} words`],
+			["Folder", note.metrics.folder],
+		] as const) {
+			const fact = facts.createDiv();
+			fact.createSpan({ text: label });
+			fact.createEl("strong", { text: value });
+		}
+		const factorSection = drawer.createDiv({ cls: "kh-drawer-factors" });
+		factorSection.createEl("h3", { text: "Why this score" });
+		for (const factor of note.result.factors) {
+			const row = factorSection.createDiv({ cls: "kh-drawer-factor" });
+			const rowHeading = row.createDiv();
+			rowHeading.createSpan({ text: factor.label });
+			rowHeading.createEl("strong", { text: `${factor.rawScore}/100` });
+			const track = row.createDiv({ cls: "kh-drawer-factor-track" });
+			const fill = track.createSpan();
+			fill.style.width = `${factor.rawScore}%`;
+			row.createEl("p", { text: factor.explanation });
+		}
+		const action = drawer.createDiv({ cls: "kh-drawer-action" });
+		action.createEl("strong", { text: "Best next action" });
+		action.createEl("p", { text: note.result.suggestedAction });
+		const footer = drawer.createDiv({ cls: "kh-drawer-footer" });
+		const openButton = footer.createEl("button", { cls: "kh-drawer-open", text: "Open note" });
+		openButton.type = "button";
+		appendIcon(openButton, "arrow-up-right", "kh-inline-icon");
+		const close = (): void => {
+			shell.remove();
+			returnFocus.focus();
+		};
+		scope.registerDomEvent(backdrop, "click", close);
+		scope.registerDomEvent(closeButton, "click", close);
+		scope.registerDomEvent(openButton, "click", () => void this.openNote(note.metrics.path));
+		scope.register(() => shell.remove());
+		closeButton.focus();
 	}
 
 	private renderRunMetadata(snapshot: AnalysisSnapshot): void {
