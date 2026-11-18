@@ -68,29 +68,37 @@
 .knowledge-heatmap-modal .kh-icon-button:hover { border-color: var(--kh-accent-border); background: var(--kh-accent-soft); color: var(--kh-accent); transform: translateY(-1px); }
 
 /* Overview */
-.knowledge-heatmap-modal .kh-overview-grid { display: grid; grid-template-columns: minmax(0, 1.18fr) minmax(390px, .92fr); gap: 20px; align-items: stretch; }
+.knowledge-heatmap-modal .kh-overview-grid { display: grid; grid-template-columns: 1fr; gap: 12px; align-items: stretch; }
 .knowledge-heatmap-modal :where(.kh-health-card, .kh-summary-card) { position: relative; margin: 0; overflow: hidden; border: 1px solid var(--kh-border); background: var(--kh-raised); color: var(--kh-text); text-align: left; box-shadow: var(--kh-shadow-s); cursor: pointer; transition: transform 170ms ease, box-shadow 170ms ease, border-color 170ms ease; }
-.knowledge-heatmap-modal .kh-health-card { --kh-health: var(--kh-healthy); isolation: isolate; display: flex; min-height: 258px; flex-direction: column; justify-content: space-between; padding: clamp(23px, 3vw, 32px); border-radius: var(--kh-r-xl); background: linear-gradient(135deg, color-mix(in srgb, var(--kh-health) 10%, var(--kh-raised)), var(--kh-raised) 58%, color-mix(in srgb, var(--kh-accent) 7%, var(--kh-raised))); white-space: normal; }
+.knowledge-heatmap-modal .kh-health-card { --kh-health: var(--kh-healthy); isolation: isolate; display: grid; min-height: 238px; grid-template-columns: minmax(0, 1.4fr) minmax(250px, .6fr); gap: 22px; padding: clamp(23px, 3vw, 32px); border-radius: var(--kh-r-xl); background: linear-gradient(135deg, color-mix(in srgb, var(--kh-health) 10%, var(--kh-raised)), var(--kh-raised) 58%, color-mix(in srgb, var(--kh-accent) 7%, var(--kh-raised))); white-space: normal; }
 .knowledge-heatmap-modal .kh-health-card:hover, .knowledge-heatmap-modal .kh-health-card.is-active { border-color: color-mix(in srgb, var(--kh-health) 42%, var(--kh-border)); box-shadow: var(--kh-shadow-m); transform: translateY(-2px); }
 .knowledge-heatmap-modal .kh-health-card-glow { position: absolute; z-index: -1; top: -100px; right: -72px; width: 275px; height: 275px; border-radius: 50%; background: color-mix(in srgb, var(--kh-health) 17%, transparent); }
 .knowledge-heatmap-modal .kh-health-card-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 32px; align-items: center; }
 .knowledge-heatmap-modal .kh-health-score-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 8px; }
 .knowledge-heatmap-modal .kh-health-score-row > strong { font-size: clamp(3rem, 7vw, 4.55rem); font-variant-numeric: tabular-nums; font-weight: 760; letter-spacing: -.075em; line-height: .96; }
+.knowledge-heatmap-modal .kh-score-total { align-self: flex-end; margin: 0 2px 7px -7px; color: var(--kh-muted); font-size: .72rem; font-variant-numeric: tabular-nums; }
 .knowledge-heatmap-modal .kh-health-pill { min-height: 27px; padding: 6px 10px; border: 1px solid color-mix(in srgb, var(--kh-health) 38%, var(--kh-border)); background: color-mix(in srgb, var(--kh-health) 11%, var(--kh-raised)); color: var(--kh-health); }
-.knowledge-heatmap-modal .kh-health-description { max-width: 52ch; margin-top: 16px; color: var(--kh-muted); font-size: .86rem; line-height: 1.65; white-space: normal; }
+.knowledge-heatmap-modal .kh-health-title { margin-top: 14px; font-size: clamp(1.05rem, 2vw, 1.35rem); font-weight: 740; letter-spacing: -.035em; line-height: 1.2; }
+.knowledge-heatmap-modal .kh-health-description { max-width: 58ch; margin-top: 7px; color: var(--kh-muted); font-size: .82rem; line-height: 1.55; white-space: normal; }
 .knowledge-heatmap-modal .kh-health-ring { position: relative; display: grid; width: clamp(108px, 12vw, 136px); aspect-ratio: 1; place-items: center; border-radius: 50%; background: conic-gradient(var(--kh-health) 0deg var(--kh-score-progress), color-mix(in srgb, var(--kh-border) 76%, transparent) var(--kh-score-progress) 360deg); box-shadow: 0 16px 36px color-mix(in srgb, var(--kh-health) 18%, transparent); }
 .knowledge-heatmap-modal .kh-health-ring::before { position: absolute; width: 78%; aspect-ratio: 1; border: 1px solid var(--kh-border); border-radius: 50%; background: var(--kh-raised); content: ""; }
 .knowledge-heatmap-modal .kh-health-ring-inner { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; color: var(--kh-health); }
 .knowledge-heatmap-modal .kh-health-ring-icon svg { width: 27px; height: 27px; }
 .knowledge-heatmap-modal .kh-health-ring-inner span:last-child { font-size: .59rem; font-weight: 760; letter-spacing: .09em; text-transform: uppercase; }
-.knowledge-heatmap-modal .kh-health-breakdown { display: flex; height: 8px; gap: 3px; margin-top: 32px; overflow: hidden; border-radius: 999px; background: var(--kh-border); }
+.knowledge-heatmap-modal .kh-health-breakdown { display: flex; height: 8px; gap: 3px; margin-top: 24px; overflow: hidden; border-radius: 999px; background: var(--kh-border); }
 .knowledge-heatmap-modal .kh-health-breakdown span { min-width: 4px; border-radius: 999px; }
 .knowledge-heatmap-modal .kh-breakdown-healthy { background: var(--kh-healthy); }
 .knowledge-heatmap-modal .kh-breakdown-stale { background: var(--kh-stale); }
 .knowledge-heatmap-modal .kh-breakdown-forgotten { background: var(--kh-forgotten); }
-.knowledge-heatmap-modal .kh-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.knowledge-heatmap-modal .kh-health-dimensions { display: grid; align-content: center; gap: 15px; padding-left: 22px; border-left: 1px solid var(--kh-border); }
+.knowledge-heatmap-modal .kh-health-dimension { display: grid; gap: 6px; }
+.knowledge-heatmap-modal .kh-health-dimension > div:first-child { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--kh-muted); font-size: .7rem; }
+.knowledge-heatmap-modal .kh-health-dimension strong { color: var(--kh-text); font-variant-numeric: tabular-nums; font-weight: 720; }
+.knowledge-heatmap-modal .kh-dimension-track { height: 6px; overflow: hidden; border-radius: 999px; background: var(--kh-border); }
+.knowledge-heatmap-modal .kh-dimension-track span { display: block; height: 100%; border-radius: inherit; background: var(--kh-accent); }
+.knowledge-heatmap-modal .kh-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .knowledge-heatmap-modal .kh-summary-card { --kh-tone: var(--kh-accent); display: flex; min-width: 0; min-height: 122px; flex-direction: column; align-items: stretch; padding: 15px; border-radius: var(--kh-r-lg); background: radial-gradient(circle at 100% 0, color-mix(in srgb, var(--kh-tone) 13%, transparent), transparent 52%), var(--kh-raised); }
-.knowledge-heatmap-modal .kh-summary-card--healthy { --kh-tone: var(--kh-healthy); } .knowledge-heatmap-modal .kh-summary-card--stale { --kh-tone: var(--kh-stale); } .knowledge-heatmap-modal .kh-summary-card--forgotten { --kh-tone: var(--kh-forgotten); }
+.knowledge-heatmap-modal .kh-summary-card--healthy { --kh-tone: var(--kh-healthy); } .knowledge-heatmap-modal .kh-summary-card--stale { --kh-tone: var(--kh-stale); } .knowledge-heatmap-modal .kh-summary-card--forgotten { --kh-tone: var(--kh-forgotten); } .knowledge-heatmap-modal .kh-summary-card--orphan { --kh-tone: var(--color-purple, #7766cc); }
 .knowledge-heatmap-modal .kh-summary-card::after { position: absolute; bottom: 0; left: 15px; width: 30px; height: 3px; border-radius: 999px 999px 0 0; background: var(--kh-tone); content: ""; transition: width 180ms ease; }
 .knowledge-heatmap-modal .kh-summary-card:hover, .knowledge-heatmap-modal .kh-summary-card.is-active { border-color: color-mix(in srgb, var(--kh-tone) 48%, var(--kh-border)); box-shadow: var(--kh-shadow-m); transform: translateY(-2px); }
 .knowledge-heatmap-modal .kh-summary-card:hover::after, .knowledge-heatmap-modal .kh-summary-card.is-active::after { width: calc(100% - 30px); }
@@ -114,6 +122,22 @@
 .knowledge-heatmap-modal .kh-field-icon svg { width: 15px; height: 15px; }
 .knowledge-heatmap-modal .kh-input-shell :where(input, select) { width: 100%; height: 42px; margin: 0; padding-left: 36px; border: 1px solid var(--kh-border); border-radius: var(--kh-r-md); background: var(--kh-bg-2); color: var(--kh-text); box-shadow: none; }
 .knowledge-heatmap-modal .kh-input-shell :where(input, select):focus { border-color: var(--kh-accent-border); background: var(--kh-bg); }
+
+/* Priority queue */
+.knowledge-heatmap-modal .kh-priority-card { padding: clamp(18px, 2.6vw, 26px); border: 1px solid var(--kh-border); border-radius: var(--kh-r-xl); background: var(--kh-raised); box-shadow: var(--kh-shadow-s); }
+.knowledge-heatmap-modal .kh-priority-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
+.knowledge-heatmap-modal .kh-priority-heading h2 { margin-top: 3px; font-size: clamp(1.15rem, 2vw, 1.42rem); font-weight: 740; letter-spacing: -.04em; line-height: 1.2; }
+.knowledge-heatmap-modal .kh-priority-heading > p { max-width: 42ch; color: var(--kh-muted); font-size: .72rem; text-align: right; }
+.knowledge-heatmap-modal .kh-priority-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+.knowledge-heatmap-modal .kh-priority-action { --kh-priority-tone: var(--kh-accent); display: grid; min-width: 0; grid-template-columns: auto minmax(0, 1fr) auto; gap: 11px; align-items: center; margin: 0; padding: 14px; border: 1px solid var(--kh-border); border-radius: var(--kh-r-lg); background: var(--kh-bg-2); color: var(--kh-text); box-shadow: none; text-align: left; white-space: normal; cursor: pointer; transition: 160ms ease; }
+.knowledge-heatmap-modal .kh-priority-action--forgotten { --kh-priority-tone: var(--kh-forgotten); }
+.knowledge-heatmap-modal .kh-priority-action--stale { --kh-priority-tone: var(--kh-stale); }
+.knowledge-heatmap-modal .kh-priority-action:hover { border-color: color-mix(in srgb, var(--kh-priority-tone) 42%, var(--kh-border)); background: color-mix(in srgb, var(--kh-priority-tone) 7%, var(--kh-raised)); transform: translateY(-1px); }
+.knowledge-heatmap-modal .kh-priority-icon { display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center; border-radius: 11px; background: color-mix(in srgb, var(--kh-priority-tone) 13%, var(--kh-raised)); color: var(--kh-priority-tone); }
+.knowledge-heatmap-modal .kh-priority-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
+.knowledge-heatmap-modal .kh-priority-copy strong { overflow: hidden; font-size: .76rem; font-weight: 720; text-overflow: ellipsis; white-space: nowrap; }
+.knowledge-heatmap-modal .kh-priority-copy > span { color: var(--kh-muted); font-size: .64rem; line-height: 1.4; }
+.knowledge-heatmap-modal .kh-priority-review { display: inline-flex; align-items: center; gap: 4px; color: var(--kh-priority-tone); font-size: .65rem; font-weight: 720; }
 
 /* Map */
 .knowledge-heatmap-modal .kh-map-header .kh-muted, .knowledge-heatmap-modal .kh-notes-heading .kh-muted { display: block; max-width: 68ch; margin-top: 5px; font-size: .74rem; }
@@ -142,11 +166,14 @@
 .knowledge-heatmap-modal .kh-folder-stale { background: var(--kh-stale); }
 .knowledge-heatmap-modal .kh-folder-forgotten { background: var(--kh-forgotten); }
 .knowledge-heatmap-modal .kh-folder-average { min-width: 48px; color: var(--kh-muted); font-variant-numeric: tabular-nums; text-align: right; }
-.knowledge-heatmap-modal .kh-map-cells { display: grid; grid-template-columns: repeat(auto-fill, minmax(2.4rem, 1fr)); gap: .4rem; }
-.knowledge-heatmap-modal button.kh-cell { position: relative; min-width: 2.4rem; height: 2.4rem; margin: 0; padding: 0; border: 1px solid var(--kh-border); border-radius: 9px; color: #fff; box-shadow: inset 0 1px 0 rgb(255 255 255 / 14%); font-size: var(--font-ui-smaller); font-variant-numeric: tabular-nums; font-weight: 720; text-shadow: 0 1px 2px rgb(0 0 0 / 55%); cursor: pointer; transition: transform 120ms ease, filter 120ms ease; }
-.knowledge-heatmap-modal button.kh-cell:hover, .knowledge-heatmap-modal button.kh-cell:focus-visible { z-index: 1; transform: scale(1.1); filter: brightness(1.08); }
+.knowledge-heatmap-modal .kh-map-cells { display: grid; grid-template-columns: repeat(auto-fill, minmax(1.75rem, 1fr)); gap: .35rem; }
+.knowledge-heatmap-modal button.kh-cell { position: relative; min-width: 1.75rem; height: 2rem; margin: 0; padding: 0; border: 0; border-radius: 7px; color: #fff; box-shadow: inset 0 1px 0 rgb(255 255 255 / 14%); font-size: var(--font-ui-smaller); cursor: pointer; transition: transform 120ms ease, filter 120ms ease, opacity 120ms ease; }
+.knowledge-heatmap-modal button.kh-intensity-1 { opacity: .48; }
+.knowledge-heatmap-modal button.kh-intensity-2 { opacity: .72; }
+.knowledge-heatmap-modal button.kh-intensity-3 { opacity: 1; }
+.knowledge-heatmap-modal button.kh-cell:hover, .knowledge-heatmap-modal button.kh-cell:focus-visible { z-index: 1; opacity: 1; transform: scale(1.1); filter: brightness(1.08); }
 .knowledge-heatmap-modal button.kh-level-stale, .knowledge-heatmap-modal button.kh-level-aging { color: #201600; text-shadow: none; } .knowledge-heatmap-modal .kh-cell-state { position: absolute; top: 1px; right: 3px; font-size: .58rem; }
-.knowledge-heatmap-modal .kh-map-more { min-width: 2.4rem; height: 2.4rem; margin: 0; padding: 0 8px; border: 1px dashed var(--kh-accent-border); border-radius: 9px; background: var(--kh-accent-soft); color: var(--kh-accent); box-shadow: none; font-size: var(--font-ui-smaller); font-weight: 720; cursor: pointer; }
+.knowledge-heatmap-modal .kh-map-more { min-width: 1.75rem; height: 2rem; margin: 0; padding: 0 8px; border: 1px dashed var(--kh-accent-border); border-radius: 7px; background: var(--kh-accent-soft); color: var(--kh-accent); box-shadow: none; font-size: var(--font-ui-smaller); font-weight: 720; cursor: pointer; }
 .knowledge-heatmap-modal .kh-map-more:hover { border-style: solid; background: var(--kh-raised); }
 
 /* Note list */
@@ -184,8 +211,8 @@
 .kh-settings-textarea { min-height: 7rem; resize: vertical; }
 
 @media (max-width: 980px) {
-	.knowledge-heatmap-modal .kh-overview-grid { grid-template-columns: 1fr; }
 	.knowledge-heatmap-modal .kh-summary { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+	.knowledge-heatmap-modal .kh-priority-list { grid-template-columns: 1fr; }
 }
 @media (max-width: 700px) {
 	.knowledge-heatmap-modal { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; border-radius: 0; }
@@ -193,18 +220,19 @@
 	.knowledge-heatmap-modal .modal-close-button { top: 12px; right: 10px; }
 	.knowledge-heatmap-modal .kh-app-header { align-items: flex-start; padding-right: 40px; } .knowledge-heatmap-modal .kh-local-badge { display: none; }
 	.knowledge-heatmap-modal .kh-brand-mark { width: 43px; height: 43px; border-radius: 13px; } .knowledge-heatmap-modal .kh-brand-copy h1 { font-size: 1.18rem; } .knowledge-heatmap-modal .kh-brand-copy p { font-size: .61rem; }
-	.knowledge-heatmap-modal .kh-health-card { min-height: auto; padding: 20px; } .knowledge-heatmap-modal .kh-health-card-body { gap: 16px; } .knowledge-heatmap-modal .kh-health-score-row > strong { font-size: clamp(2.7rem, 16vw, 3.7rem); } .knowledge-heatmap-modal .kh-health-description { font-size: .78rem; } .knowledge-heatmap-modal .kh-health-ring { width: 96px; }
+	.knowledge-heatmap-modal .kh-health-card { min-height: auto; grid-template-columns: 1fr; padding: 20px; } .knowledge-heatmap-modal .kh-health-card-body { gap: 16px; } .knowledge-heatmap-modal .kh-health-score-row > strong { font-size: clamp(2.7rem, 16vw, 3.7rem); } .knowledge-heatmap-modal .kh-health-description { font-size: .78rem; } .knowledge-heatmap-modal .kh-health-ring { width: 96px; } .knowledge-heatmap-modal .kh-health-dimensions { grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 16px 0 0; border-top: 1px solid var(--kh-border); border-left: 0; }
 	.knowledge-heatmap-modal .kh-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-	.knowledge-heatmap-modal :where(.kh-controls-heading, .kh-section-heading) { align-items: flex-start; flex-direction: column; gap: 8px; } .knowledge-heatmap-modal .kh-controls-heading > p { text-align: left; }
+	.knowledge-heatmap-modal :where(.kh-controls-heading, .kh-section-heading, .kh-priority-heading) { align-items: flex-start; flex-direction: column; gap: 8px; } .knowledge-heatmap-modal :where(.kh-controls-heading, .kh-priority-heading) > p { text-align: left; }
 	.knowledge-heatmap-modal .kh-toolbar { grid-template-columns: 1fr; } .knowledge-heatmap-modal .kh-input-shell :where(input, select) { min-height: 44px; }
 	.knowledge-heatmap-modal .kh-map-header { align-items: stretch; } .knowledge-heatmap-modal .kh-segmented { width: 100%; } .knowledge-heatmap-modal .kh-segmented button { min-height: 44px; flex: 1; padding-inline: 8px; font-size: .72rem; }
 	.knowledge-heatmap-modal .kh-legend { margin-top: -10px; gap: 7px 12px; font-size: .68rem; } .knowledge-heatmap-modal .kh-map { margin-bottom: 24px; padding: 14px; }
-	.knowledge-heatmap-modal .kh-map-group-heading { align-items: flex-start; flex-direction: column; gap: 8px; } .knowledge-heatmap-modal .kh-folder-health { width: 100%; } .knowledge-heatmap-modal .kh-folder-distribution { flex: 1; width: auto; } .knowledge-heatmap-modal .kh-map-cells { grid-template-columns: repeat(auto-fill, minmax(2.1rem, 1fr)); gap: .34rem; } .knowledge-heatmap-modal button.kh-cell, .knowledge-heatmap-modal .kh-map-more { min-width: 2.1rem; height: 2.25rem; }
+	.knowledge-heatmap-modal .kh-map-group-heading { align-items: flex-start; flex-direction: column; gap: 8px; } .knowledge-heatmap-modal .kh-folder-health { width: 100%; } .knowledge-heatmap-modal .kh-folder-distribution { flex: 1; width: auto; } .knowledge-heatmap-modal .kh-map-cells { grid-template-columns: repeat(auto-fill, minmax(2rem, 1fr)); gap: .34rem; } .knowledge-heatmap-modal button.kh-cell, .knowledge-heatmap-modal .kh-map-more { min-width: 2rem; height: 2.25rem; }
 	.knowledge-heatmap-modal .kh-note-card { padding: 16px 14px; } .knowledge-heatmap-modal .kh-note-main { gap: 12px; align-items: start; } .knowledge-heatmap-modal .kh-note-score { width: 54px; height: 54px; } .knowledge-heatmap-modal .kh-note-heading { align-items: flex-start; flex-direction: column; gap: 6px; } .knowledge-heatmap-modal .kh-note-card details { margin-left: 66px; } .knowledge-heatmap-modal .kh-factor-list li { grid-template-columns: 1fr; gap: 2px; }
 	.kh-tooltip { width: min(19rem, calc(100vw - 24px)); }
 }
 @media (max-width: 390px) {
 	.knowledge-heatmap-modal .kh-health-ring, .knowledge-heatmap-modal .kh-note-score { display: none; }
+	.knowledge-heatmap-modal .kh-health-dimensions { grid-template-columns: 1fr; }
 	.knowledge-heatmap-modal .kh-summary-card { min-height: 112px; padding: 13px; } .knowledge-heatmap-modal .kh-summary-hint { white-space: normal; }
 	.knowledge-heatmap-modal .kh-note-main { grid-template-columns: 1fr; } .knowledge-heatmap-modal .kh-note-card details { margin-left: 0; }
 }

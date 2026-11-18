@@ -18,7 +18,7 @@ const MAX_FOLDER_ROWS = 20;
 const TOOLTIP_GAP = 8;
 const TOOLTIP_MARGIN = 8;
 
-type StatusFilter = "all" | HealthStatus;
+type StatusFilter = "all" | "orphan" | "thin" | HealthStatus;
 type MapMode = "health" | "freshness" | "connections";
 interface ActiveMapTooltip {
 	anchor: HTMLButtonElement;
@@ -37,6 +37,24 @@ function formatDuration(milliseconds: number): string {
 
 function formatCount(value: number, singular: string): string {
 	return `${value.toLocaleString()} ${singular}${value === 1 ? "" : "s"}`;
+}
+
+function isOrphan(note: NoteHealth): boolean {
+	return note.metrics.backlinks + note.metrics.outlinks === 0;
+}
+
+function factorScore(note: NoteHealth, factorId: "recency" | "connections" | "substance"): number {
+	return note.result.factors.find((factor) => factor.id === factorId)?.rawScore ?? 0;
+}
+
+function averageFactorScore(
+	notes: readonly NoteHealth[],
+	factorId: "recency" | "connections" | "substance",
+): number {
+	if (notes.length === 0) return 0;
+	return Math.round(
+		notes.reduce((total, note) => total + factorScore(note, factorId), 0) / notes.length,
+	);
 }
 
 function appendIcon(parent: HTMLElement, icon: string, className: string): HTMLSpanElement {
@@ -176,6 +194,7 @@ export class KnowledgeHeatmapModal extends Modal {
 		}
 
 		this.renderToolbar(scope, snapshot);
+		this.renderPriorityQueue(scope, snapshot);
 		this.renderMapControls(scope, snapshot);
 		this.renderNotes(snapshot);
 		this.renderRunMetadata(snapshot);
@@ -203,6 +222,12 @@ export class KnowledgeHeatmapModal extends Modal {
 	}
 
 	private renderSummary(scope: Component, snapshot: AnalysisSnapshot): void {
+		const orphanCount = snapshot.notes.filter(isOrphan).length;
+		const dimensions = [
+			["Freshness", averageFactorScore(snapshot.notes, "recency")],
+			["Connections", averageFactorScore(snapshot.notes, "connections")],
+			["Substance", averageFactorScore(snapshot.notes, "substance")],
+		] as const;
 		const overview = this.contentEl.createDiv({ cls: "kh-overview-grid" });
 		const hero = overview.createEl("button", {
 			cls: `kh-health-card${this.statusFilter === "all" ? " is-active" : ""}`,
@@ -213,14 +238,18 @@ export class KnowledgeHeatmapModal extends Modal {
 		heroGlow.setAttr("aria-hidden", "true");
 		const heroBody = hero.createDiv({ cls: "kh-health-card-body" });
 		const heroCopy = heroBody.createDiv({ cls: "kh-health-card-copy" });
-		heroCopy.createEl("p", { cls: "kh-eyebrow", text: "Overall knowledge health" });
+		heroCopy.createEl("p", { cls: "kh-eyebrow", text: "Vault health" });
 		const scoreRow = heroCopy.createDiv({ cls: "kh-health-score-row" });
-		scoreRow.createEl("strong", { text: `${snapshot.summary.averageScore}%` });
+		scoreRow.createEl("strong", { text: String(snapshot.summary.averageScore) });
+		scoreRow.createSpan({ cls: "kh-score-total", text: "/100" });
 		const scoreLabel = snapshot.summary.averageScore >= 70 ? "Healthy" : snapshot.summary.averageScore >= 40 ? "Needs attention" : "At risk";
 		scoreRow.createSpan({ cls: "kh-health-pill", text: scoreLabel });
+		heroCopy.createEl("h2", { cls: "kh-health-title", text: "Strengthen the notes that matter" });
 		heroCopy.createEl("p", {
 			cls: "kh-health-description",
-			text: "A weighted view of recency, connections, and substance across every included note.",
+			text: snapshot.summary.forgotten + orphanCount > 0
+				? `${formatCount(snapshot.summary.forgotten, "forgotten note")} and ${formatCount(orphanCount, "orphan")} are the best place to start.`
+				: "Your vault is in good shape. Keep reviewing the lowest-scoring folders.",
 		});
 		const ring = heroBody.createDiv({ cls: "kh-health-ring" });
 		const ringInner = ring.createDiv({ cls: "kh-health-ring-inner" });
@@ -233,6 +262,16 @@ export class KnowledgeHeatmapModal extends Modal {
 				segment.style.flexGrow = String(count);
 			}
 		}
+		const dimensionList = hero.createDiv({ cls: "kh-health-dimensions" });
+		for (const [label, value] of dimensions) {
+			const dimension = dimensionList.createDiv({ cls: "kh-health-dimension" });
+			const dimensionHeading = dimension.createDiv();
+			dimensionHeading.createSpan({ text: label });
+			dimensionHeading.createEl("strong", { text: String(value) });
+			const track = dimension.createDiv({ cls: "kh-dimension-track" });
+			const fill = track.createSpan();
+			fill.style.width = `${value}%`;
+		}
 		scope.registerDomEvent(hero, "click", () => {
 			this.statusFilter = "all";
 			this.folderFilter = undefined;
@@ -244,7 +283,7 @@ export class KnowledgeHeatmapModal extends Modal {
 		this.createSummaryCard(scope, summary, "Healthy", snapshot.summary.healthy.toLocaleString(), "healthy", "check-circle-2", "Ready and maintained", snapshot);
 		this.createSummaryCard(scope, summary, "Stale", snapshot.summary.stale.toLocaleString(), "stale", "clock-3", "Worth revisiting", snapshot);
 		this.createSummaryCard(scope, summary, "Forgotten", snapshot.summary.forgotten.toLocaleString(), "forgotten", "archive", "Needs recovery", snapshot);
-		this.createSummaryCard(scope, summary, "Included", snapshot.summary.total.toLocaleString(), "all", "files", "In this analysis", snapshot);
+		this.createSummaryCard(scope, summary, "Orphans", orphanCount.toLocaleString(), "orphan", "unlink", "No links yet", snapshot);
 	}
 
 	private createSummaryCard(scope: Component, parent: HTMLElement, label: string, value: string, filter: StatusFilter, icon: string, hint: string, snapshot: AnalysisSnapshot): void {
@@ -314,6 +353,8 @@ export class KnowledgeHeatmapModal extends Modal {
 			["healthy", "Healthy"],
 			["stale", "Stale"],
 			["forgotten", "Forgotten"],
+			["orphan", "Orphan notes"],
+			["thin", "Thin notes"],
 		] as const) {
 			statusSelect.createEl("option", { value, text: label });
 		}
@@ -331,6 +372,78 @@ export class KnowledgeHeatmapModal extends Modal {
 			this.visibleLimit = PAGE_SIZE;
 			this.renderNotes(snapshot);
 		});
+	}
+
+	private renderPriorityQueue(scope: Component, snapshot: AnalysisSnapshot): void {
+		const orphanCount = snapshot.notes.filter(isOrphan).length;
+		const thinCount = snapshot.notes.filter((note) => factorScore(note, "substance") < 50).length;
+		const weakestFolder = snapshot.folders[0];
+		const queue = this.contentEl.createEl("section", { cls: "kh-priority-card" });
+		const heading = queue.createDiv({ cls: "kh-priority-heading" });
+		const headingCopy = heading.createDiv();
+		headingCopy.createEl("p", { cls: "kh-eyebrow", text: "Priority queue" });
+		headingCopy.createEl("h2", { text: "Best next actions" });
+		heading.createEl("p", {
+			text: "Start with the fixes that can improve the most notes.",
+		});
+		const list = queue.createDiv({ cls: "kh-priority-list" });
+		const actions: Array<{
+			label: string;
+			detail: string;
+			icon: string;
+			tone: string;
+			run: () => void;
+		}> = [];
+		if (orphanCount > 0) {
+			actions.push({
+				label: `Reconnect ${formatCount(orphanCount, "orphan note")}`,
+				detail: "Add useful relationships to improve connection health.",
+				icon: "unlink",
+				tone: "forgotten",
+				run: () => {
+					this.statusFilter = "orphan";
+					this.folderFilter = undefined;
+					this.renderSnapshot(snapshot);
+				},
+			});
+		}
+		if (weakestFolder) {
+			actions.push({
+				label: `Review ${weakestFolder.path}`,
+				detail: `${formatCount(weakestFolder.noteCount, "note")} · ${weakestFolder.averageScore}% average health.`,
+				icon: "folder-search-2",
+				tone: "stale",
+				run: () => {
+					this.statusFilter = "all";
+					this.folderFilter = weakestFolder.path;
+					this.renderSnapshot(snapshot);
+				},
+			});
+		}
+		if (thinCount > 0) {
+			actions.push({
+				label: `Develop ${formatCount(thinCount, "thin note")}`,
+				detail: "Add a concise summary, key points, or a clear next step.",
+				icon: "file-text",
+				tone: "accent",
+				run: () => {
+					this.statusFilter = "thin";
+					this.folderFilter = undefined;
+					this.renderSnapshot(snapshot);
+				},
+			});
+		}
+		for (const action of actions.slice(0, 3)) {
+			const button = list.createEl("button", { cls: `kh-priority-action kh-priority-action--${action.tone}` });
+			button.type = "button";
+			appendIcon(button, action.icon, "kh-priority-icon");
+			const copy = button.createSpan({ cls: "kh-priority-copy" });
+			copy.createEl("strong", { text: action.label });
+			copy.createSpan({ text: action.detail });
+			const review = button.createSpan({ cls: "kh-priority-review", text: "Review" });
+			appendIcon(review, "arrow-right", "kh-inline-icon");
+			scope.registerDomEvent(button, "click", action.run);
+		}
 	}
 
 	private renderLegend(): void {
@@ -480,7 +593,8 @@ export class KnowledgeHeatmapModal extends Modal {
 			: orphan ? "orphan" : totalLinks >= 6 ? "connected" : "some-links";
 		const value = this.mapMode === "health" ? note.result.score : this.mapMode === "freshness"
 			? Math.min(999, note.result.ageDays) : totalLinks;
-		const cell = parent.createEl("button", { cls: `kh-cell kh-level-${level}` });
+		const intensity = value >= 70 ? 3 : value >= 40 ? 2 : 1;
+		const cell = parent.createEl("button", { cls: `kh-cell kh-level-${level} kh-intensity-${intensity}` });
 		cell.type = "button";
 		cell.setAttr("role", "listitem");
 		this.tooltipSequence += 1;
@@ -493,8 +607,6 @@ export class KnowledgeHeatmapModal extends Modal {
 		accessibleLabel.id = labelId;
 		cell.setAttr("aria-labelledby", labelId);
 		cell.setAttr("aria-describedby", tooltipId);
-		const cellValue = cell.createSpan({ cls: "kh-cell-value", text: String(value) });
-		cellValue.setAttr("aria-hidden", "true");
 		if (orphan) {
 			cell.createSpan({ cls: "kh-cell-state", text: "⚠" }).setAttr("aria-hidden", "true");
 		} else if (connected) {
@@ -676,8 +788,10 @@ export class KnowledgeHeatmapModal extends Modal {
 	private filteredNotes(notes: readonly NoteHealth[]): NoteHealth[] {
 		const query = this.searchQuery.trim().toLocaleLowerCase();
 		return notes.filter((note) => {
-			const matchesStatus =
-				this.statusFilter === "all" || note.result.status === this.statusFilter;
+			const matchesStatus = this.statusFilter === "all"
+				|| (this.statusFilter === "orphan" ? isOrphan(note)
+					: this.statusFilter === "thin" ? factorScore(note, "substance") < 50
+						: note.result.status === this.statusFilter);
 			const matchesQuery =
 				query.length === 0 || note.metrics.path.toLocaleLowerCase().includes(query);
 			const matchesFolder = !this.folderFilter || note.metrics.folder === this.folderFilter;
