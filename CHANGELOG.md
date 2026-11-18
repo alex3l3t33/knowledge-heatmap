@@ -2,6 +2,15 @@
 
 All notable changes to Knowledge Heatmap are documented here.
 
+## 1.0.8 - 2026-11-18
+
+- Added a 30-day vault-health history chart using compact daily aggregates; note contents are never stored in history.
+- Added a responsive note-detail drawer with score factors, note metrics, recommendations, and direct note opening.
+- Preserved the “Where attention is needed” knowledge-map panel as a primary dashboard view.
+- Added desktop side-drawer and mobile bottom-sheet layouts with keyboard focus restoration and accessible labels.
+- Preserved scoring, vault access, settings compatibility, caching, and the existing release workflow.
+- Passed strict linting, 30 tests, type checking, release verification, a zero-vulnerability audit, and CI on Node.js 20, 22, and 24.
+
 ## 1.0.7 - 2026-11-18
 
 - Redesigned the dashboard around actionable vault health while preserving the existing scoring model and local vault access.
