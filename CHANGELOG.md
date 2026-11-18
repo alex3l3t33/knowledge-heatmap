@@ -2,6 +2,16 @@
 
 All notable changes to Knowledge Heatmap are documented here.
 
+## 1.0.7 - 2026-11-18
+
+- Redesigned the dashboard around actionable vault health while preserving the existing scoring model and local vault access.
+- Added aggregate Freshness, Connections, and Substance explanations for the overall score.
+- Added a data-driven priority queue for orphan notes, the weakest folder, and underdeveloped notes.
+- Added dedicated orphan and thin-note filters and replaced repetitive numeric map cells with compact intensity-based tiles.
+- Improved responsive desktop and mobile layouts, theme integration, touch targets, and information hierarchy.
+- Updated the development toolchain and passed the dependency audit with zero known vulnerabilities.
+- Passed strict linting, 27 tests, type checking, production build verification, and CI on Node.js 20, 22, and 24.
+
 ## 1.0.5 - 2026-10-13
 
 - Rebuilt the dashboard hierarchy and visual system to match the presentation quality of RecallMap while retaining Knowledge Heatmap's identity.
