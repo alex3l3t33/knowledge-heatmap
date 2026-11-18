@@ -137,6 +137,10 @@ The release was exercised on Obsidian 1.13.4 on macOS and with Obsidian's deskto
 - A full recalculation still visits each included Markdown file, although unchanged content metrics are cached and work is yielded in batches.
 - Suggested actions are recommendations only; the plugin never edits a note on the user's behalf.
 
+## Support
+
+If Knowledge Heatmap has earned a place in your workflow, thank you — your appreciation means a lot and helps support its continued development. You can [support the project on Ko-fi](https://ko-fi.com/alexandre42682).
+
 ## Development
 
 Node.js 20 or newer and npm are required.

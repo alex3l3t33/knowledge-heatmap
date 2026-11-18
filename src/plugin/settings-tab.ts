@@ -10,6 +10,12 @@ import { DEFAULT_SETTINGS } from "../core/settings";
 import { normalizePathInput } from "../core/paths";
 import type { KnowledgeHeatmapSettings } from "../core/types";
 
+const KO_FI_URL = "https://ko-fi.com/alexandre42682";
+const SUPPORT_SETTING_NAME = "Support Knowledge Heatmap";
+const SUPPORT_BUTTON_TEXT = "Support on Ko-fi";
+const SUPPORT_MESSAGE =
+	"If Knowledge Heatmap has earned a place in your workflow, thank you — your appreciation means a lot and helps support its continued development.";
+
 type NumericSettingKey =
 	| "staleAfterDays"
 	| "forgottenAfterDays"
@@ -119,6 +125,23 @@ export class KnowledgeHeatmapSettingTab extends PluginSettingTab {
 			{
 				name: "Local processing",
 				desc: "This plugin reads Markdown notes and Obsidian's local link metadata. It does not modify notes or send data over the network.",
+			},
+			{
+				name: SUPPORT_SETTING_NAME,
+				desc: SUPPORT_MESSAGE,
+				render: (setting) => {
+					setting
+						.setName(SUPPORT_SETTING_NAME)
+						.setDesc(SUPPORT_MESSAGE)
+						.addButton((button) =>
+							button
+								.setButtonText(SUPPORT_BUTTON_TEXT)
+								.setCta()
+								.onClick(() => {
+									window.open(KO_FI_URL, "_blank", "noopener,noreferrer");
+								}),
+						);
+				},
 			},
 		];
 	}
@@ -253,6 +276,18 @@ export class KnowledgeHeatmapSettingTab extends PluginSettingTab {
 			cls: "setting-item-description",
 			text: "This plugin reads Markdown notes and Obsidian's local link metadata. It does not modify notes or send data over the network.",
 		});
+
+		new Setting(containerEl)
+			.setName(SUPPORT_SETTING_NAME)
+			.setDesc(SUPPORT_MESSAGE)
+			.addButton((button) =>
+				button
+					.setButtonText(SUPPORT_BUTTON_TEXT)
+					.setCta()
+					.onClick(() => {
+						window.open(KO_FI_URL, "_blank", "noopener,noreferrer");
+					}),
+			);
 	}
 
 	private addNumberSetting(options: NumberSettingOptions): void {
