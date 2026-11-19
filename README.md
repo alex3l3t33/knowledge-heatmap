@@ -2,6 +2,8 @@
 
 Knowledge Heatmap is a local-first Obsidian plugin that turns note-maintenance signals into an understandable dashboard. It highlights notes and folders that may need review without changing note content or deciding whether an idea is valuable.
 
+☕ **Enjoying Knowledge Heatmap? [Support its continued development on Ko-fi](https://ko-fi.com/alexandre42682).**
+
 The dashboard answers three practical questions:
 
 | Signal | What it asks | Weight |

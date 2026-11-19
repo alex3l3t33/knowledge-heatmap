@@ -2,6 +2,14 @@
 
 All notable changes to Knowledge Heatmap are documented here.
 
+## 1.0.9 - 2026-11-19
+
+- Fixed the “Best next actions” cards so their content remains fully contained when Obsidian themes apply compact button sizing.
+- Added equal-height action rows, automatic card height, two-line detail clamping, and stable review-action alignment across desktop and narrow layouts.
+- Added a Ko-fi support link near the top of the plugin description.
+- Preserved scoring, vault access, settings compatibility, privacy behavior, and the existing release workflow.
+- Passed strict linting, 30 tests, type checking, production build verification, and a zero-vulnerability audit.
+
 ## 1.0.8 - 2026-11-18
 
 - Added a 30-day vault-health history chart using compact daily aggregates; note contents are never stored in history.

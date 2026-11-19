@@ -143,16 +143,16 @@
 .knowledge-heatmap-modal .kh-priority-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; }
 .knowledge-heatmap-modal .kh-priority-heading h2 { margin-top: 3px; font-size: clamp(1.15rem, 2vw, 1.42rem); font-weight: 740; letter-spacing: -.04em; line-height: 1.2; }
 .knowledge-heatmap-modal .kh-priority-heading > p { max-width: 42ch; color: var(--kh-muted); font-size: .72rem; text-align: right; }
-.knowledge-heatmap-modal .kh-priority-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
-.knowledge-heatmap-modal .kh-priority-action { --kh-priority-tone: var(--kh-accent); display: grid; min-width: 0; grid-template-columns: auto minmax(0, 1fr) auto; gap: 11px; align-items: center; margin: 0; padding: 14px; border: 1px solid var(--kh-border); border-radius: var(--kh-r-lg); background: var(--kh-bg-2); color: var(--kh-text); box-shadow: none; text-align: left; white-space: normal; cursor: pointer; transition: 160ms ease; }
+.knowledge-heatmap-modal .kh-priority-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; align-items: stretch; margin-top: 18px; }
+.knowledge-heatmap-modal .kh-priority-action { --kh-priority-tone: var(--kh-accent); display: grid; box-sizing: border-box; width: 100%; min-width: 0; min-height: 94px; height: auto; grid-template-columns: auto minmax(0, 1fr) auto; gap: 11px; align-items: center; margin: 0; padding: 14px; overflow: hidden; border: 1px solid var(--kh-border); border-radius: var(--kh-r-lg); background: var(--kh-bg-2); color: var(--kh-text); box-shadow: none; text-align: left; white-space: normal; cursor: pointer; transition: 160ms ease; }
 .knowledge-heatmap-modal .kh-priority-action--forgotten { --kh-priority-tone: var(--kh-forgotten); }
 .knowledge-heatmap-modal .kh-priority-action--stale { --kh-priority-tone: var(--kh-stale); }
 .knowledge-heatmap-modal .kh-priority-action:hover { border-color: color-mix(in srgb, var(--kh-priority-tone) 42%, var(--kh-border)); background: color-mix(in srgb, var(--kh-priority-tone) 7%, var(--kh-raised)); transform: translateY(-1px); }
 .knowledge-heatmap-modal .kh-priority-icon { display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center; border-radius: 11px; background: color-mix(in srgb, var(--kh-priority-tone) 13%, var(--kh-raised)); color: var(--kh-priority-tone); }
 .knowledge-heatmap-modal .kh-priority-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }
 .knowledge-heatmap-modal .kh-priority-copy strong { overflow: hidden; font-size: .76rem; font-weight: 720; text-overflow: ellipsis; white-space: nowrap; }
-.knowledge-heatmap-modal .kh-priority-copy > span { color: var(--kh-muted); font-size: .64rem; line-height: 1.4; }
-.knowledge-heatmap-modal .kh-priority-review { display: inline-flex; align-items: center; gap: 4px; color: var(--kh-priority-tone); font-size: .65rem; font-weight: 720; }
+.knowledge-heatmap-modal .kh-priority-copy > span { display: -webkit-box; overflow: hidden; color: var(--kh-muted); font-size: .64rem; line-height: 1.4; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.knowledge-heatmap-modal .kh-priority-review { display: inline-flex; align-items: center; gap: 4px; color: var(--kh-priority-tone); font-size: .65rem; font-weight: 720; white-space: nowrap; }
 
 /* Map */
 .knowledge-heatmap-modal .kh-map-header .kh-muted, .knowledge-heatmap-modal .kh-notes-heading .kh-muted { display: block; max-width: 68ch; margin-top: 5px; font-size: .74rem; }
